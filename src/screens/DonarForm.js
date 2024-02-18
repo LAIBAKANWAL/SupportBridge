@@ -202,7 +202,12 @@ export default function DonarForm() {
         if (!isChecked) {
             handleError('Please agree to the terms & conditions.', 'term');
             valid = false;
+        } else {
+            if (errors.term) {
+                handleError(null, 'term');
+            }
         }
+
 
         if (valid) {
             submit();
@@ -239,20 +244,24 @@ export default function DonarForm() {
     }
 
     const handleCategoryChange = (value) => {
-        setAllCategories(value)
+        setAllCategories(value);
+        if (errors.allcategories) {
+            handleError(null, 'allcategories');
+        }
     };
 
 
     return (
 
         <SafeAreaView
-            style={{ flex: 1, marginHorizontal: SIZES.small - 3 }}
-        >
-            <Header
-                title="Create New Fundraising"
-                showBackButton
-            />
-
+            style={{ flex: 1, backgroundColor: COLORS.white }}>
+            <Loader visible={loading} />
+            <View style={{ marginHorizontal: SIZES.small - 6 }}>
+                <Header
+                    title="Create New Fundraising"
+                    showBackButton
+                />
+            </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                     <View style={styles.imageBox}>
@@ -313,121 +322,123 @@ export default function DonarForm() {
 
                 </View>
 
-                <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
-                <View style={{ flex: 1, marginHorizontal: 10 }} >
-                    <View>
-                        <Text style={{
-                            fontSize: 22,
-                            fontWeight: 'bold',
-                            marginVertical: 20,
-                            color: COLORS.black,
-                            // textAlign: "center"
-                        }}>
-                            Fundraising Details
-                        </Text>
+                <View style={{ marginHorizontal: SIZES.medium}}>
+
+                    <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
+                    <View style={{ flex: 1, marginHorizontal: SIZES.xSmall - 5}} >
+                        <View>
+                            <Text style={{
+                                fontSize: 22,
+                                fontWeight: 'bold',
+                                marginVertical: 20,
+                                color: COLORS.black,
+                            }}>
+                                Fundraising Details
+                            </Text>
+                        </View>
+
+                        <Label text="Title" icon iconPosition={33} />
+                        <InputField
+                            value={title}
+                            placeholder="Title"
+                            keyboardType="default"
+                            onChange={text => setTitle(text)}
+                            error={errors.title}
+                            onFocus={() => {
+                                handleError(null, 'title');
+                            }}
+                        />
+
+
+                        <Label text="Category" icon iconPosition={65} />
+                        <DropdownField
+                            options={categories}
+                            initialValue={allcategories}
+                            onValueChange={handleCategoryChange}
+                            placeholder="Select Category"
+                            error={errors.allcategories}
+                            onFocus={() => {
+                                handleError(null, 'allcategories');
+                            }}
+                        />
+
+
+                        <Label text="Description" icon iconPosition={81} />
+                        <InputField
+                            placeholder="write details about item ....."
+                            value={description}
+                            error={errors.description}
+                            onChange={text => setDescription(text)}
+                            onFocus={() => {
+                                handleError(null, 'description');
+                            }}
+                            keyboardType="default"
+                            multiline={true}
+                            numberOfLines={3}
+                        />
+
+                        <Checkbox
+                            label="By checking this, you agree to the terms & conditions that apply to us."
+                            isChecked={isChecked}
+                            onPress={() => {
+                                setIsChecked(!isChecked);
+                                if (errors.term) {
+                                    handleError(null, 'term');
+                                }
+                            }
+                            }
+                        />
+                        <Text style={{ color: COLORS.red, fontSize: 13,}}>{errors.term}</Text>
+
+
                     </View>
 
-                    <Label text="Title" icon iconPosition={33} />
-                    <InputField
-                        value={title}
-                        placeholder="Title"
-                        keyboardType="default"
-                        // onChange={text => handleOnChange(text, 'title')}
-                        onChange={text => setTitle(text)}
-                        error={errors.title}
-                        onFocus={() => {
-                            handleError(null, 'title');
+                    <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
+
+
+                    <Button
+                        onPress={validate}
+                        title="Create & Submit"
+                        filled={true}
+                        width='100%'
+                        style={{
+                            marginTop: 18,
+                            marginBottom: 20
                         }}
                     />
 
-
-                    <Label text="Category" icon iconPosition={65} />
-                    <DropdownField
-                        options={categories}
-                        initialValue={allcategories}
-                        onValueChange={handleCategoryChange}
-                        placeholder="Select Category"
-                        error={errors.allcategories}
-                        onFocus={() => {
-                            handleError(null, 'allcategories');
-                        }}
-                    />
-
-
-                    <Label text="Description" icon iconPosition={81} />
-                    <InputField
-                        placeholder="write details about item ....."
-                        value={description}
-                        error={errors.description}
-                        onChange={text => setDescription(text)}
-                        onFocus={() => {
-                            handleError(null, 'description');
-                        }}
-                        keyboardType="default"
-                        multiline={true}
-                        numberOfLines={3}
-                    />
-
-                    <Checkbox
-                        label="By checking this, you agree to the terms & conditions that apply to us."
-                        isChecked={isChecked}
-                        onPress={() => setIsChecked(!isChecked)}
-                    />
-                    <Text style={{ color: COLORS.red, fontSize: 13, }}>{errors.term}</Text>
-
-
-
-                </View>
-
-
-
-
-                <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
-
-
-                <Button
-                    onPress={validate}
-                    title="Create & Submit"
-                    filled={true}
-                    width='100%'
-                    style={{
-                        marginTop: 18,
-                        marginBottom: 20
-                    }}
-                />
-
-                <View centeredView>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={isSubmitModalVisible}
-                        onRequestClose={closeModal}
-                        style={styles.modalBox}
-                    >
-                        <View style={[styles.modalBox, isBlurVisible && styles.blurBackground]}>
-                            <View style={styles.modalView}>
-                                <View style={{ alignItems: "center" }}>
-                                    <Image source={require('../../assets/images/check.png')}
-                                        style={{
-                                            marginBottom: 20
-                                        }}
+                    <View centeredView>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={isSubmitModalVisible}
+                            onRequestClose={closeModal}
+                            style={styles.modalBox}
+                        >
+                            <View style={[styles.modalBox, isBlurVisible && styles.blurBackground]}>
+                                <View style={styles.modalView}>
+                                    <View style={{ alignItems: "center" }}>
+                                        <Image source={require('../../assets/images/check.png')}
+                                            style={{
+                                                marginBottom: 20
+                                            }}
+                                        />
+                                    </View>
+                                    <Text style={styles.boxText(SIZES.xLarge)}>Submit Successful!</Text>
+                                    <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are currently reviewing a fundraising proposal for your donation. We will tell you the result soon.</Text>
+                                    <Button
+                                        onPress={closeModal} // Ensure this calls the submit function for navigation
+                                        title="OK"
+                                        filled={true}
+                                        width='100%'
                                     />
                                 </View>
-                                <Text style={styles.boxText(SIZES.xLarge)}>Submit Successful!</Text>
-                                <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are currently reviewing a fundraising proposal for your donation. We will tell you the result soon.</Text>
-                                <Button
-                                    onPress={closeModal} // Ensure this calls the submit function for navigation
-                                    title="OK"
-                                    filled={true}
-                                    width='100%'
-                                />
                             </View>
-                        </View>
-                    </Modal>
+                        </Modal>
+
+                    </View>
 
                 </View>
-
-
             </ScrollView>
 
 

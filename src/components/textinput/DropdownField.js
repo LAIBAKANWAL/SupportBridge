@@ -40,10 +40,21 @@ const DropdownField = ({ options,
       placeholder={placeholder}
       style={{
         borderColor: error ? COLORS.red : isFocused ? COLORS.primary : COLORS.lightGray,
-        backgroundColor:"transparent"
+        backgroundColor:"transparent",
+        color: COLORS.black,
       }}
       zIndex={zIndex}
       showTickIcon={showTickIcon}
+      onFocus={() => {
+        onFocus();
+        setIsFocused(true);
+      }}
+      onBlur={() => {
+        setIsFocused(false);
+      }}
+      placeholderStyle={{
+        color: COLORS.grey}}
+      {...props}
     />
      {error && (
  <Text style={{color:COLORS.red,fontSize:13,marginTop:7}}>{error}</Text>

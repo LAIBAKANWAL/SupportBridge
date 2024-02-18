@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
-import React,{useState} from 'react';
+import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
@@ -7,15 +7,12 @@ import Fonts from '../../../constants/Fonts';
 
 const Checkbox = ({label,isChecked,onPress}) =>{
 
-    // const [isChecked, setIsChecked] = useState(false);
-
   return (
     <View style={{
         flexDirection: 'row',
     }}>
         <TouchableOpacity
             style={[styles.checkboxContainer, isChecked && styles.selected]}
-            // onPress={() => setIsChecked(!isChecked)}
             onPress={onPress}
         >
             {isChecked ? (

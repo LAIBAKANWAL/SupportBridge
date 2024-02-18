@@ -7,13 +7,13 @@ import Profile from './Profile';
 import Saved from './Saved';
 import Create from './Create';
 import DonarForm from './DonarForm';
-import { ReceiverForm } from '../..';
+import { ReceiverForm } from './ReceiverForm';
+import Admin from './Admin';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import COLORS from '../../constants/Colors';
 import { moneyIcon } from '../components/Data';
-import { formToJSON } from 'axios';
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -101,8 +101,8 @@ const BottomNavigation = () => {
       />
       
       <Tab.Screen
-        name="Donation"
-        component={Donation}
+        name="Admin"
+        component={Admin}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

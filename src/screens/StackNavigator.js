@@ -1,9 +1,6 @@
 import React from "react";
-import { Text } from "react-native";
 import { createStackNavigator } from '@react-navigation/stack';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Signup, Login, Onboarding, Search, BottomNavigation, FundraiserDetails, Donation, Payment, Setting, EditProfileScreen, NotificationScreen, SecurityScreen, HelpScreen, AccountDelete, Inbox, DonarForm,ReceiverForm,CreatePassword,MainNotification,AllCategories } from '../../index';
-import COLORS from "../../constants/Colors";
+import { Signup, Login, Onboarding, Search, BottomNavigation, FundraiserDetails, Donation, Payment, Setting, EditProfileScreen, NotificationScreen, SecurityScreen, HelpScreen, AccountDelete, Inbox,CreatePassword,MainNotification,AllCategories } from '../../index';
 
 
 const Stack = createStackNavigator();
@@ -118,21 +115,7 @@ const StackNavigator = () => {
                     headerShown: false, // Hide the default header
                 }}
             />
- <Stack.Screen
-                name="DonarForm"
-                component={DonarForm}
-                options={{
-                    headerShown: false, // Hide the default header
-                }}
-            />
 
-<Stack.Screen
-                name="ReceiverForm"
-                component={ReceiverForm}
-                options={{
-                    headerShown: false, // Hide the default header
-                }}
-            />
             <Stack.Screen
                 name="CreatePassword"
                 component={CreatePassword}
