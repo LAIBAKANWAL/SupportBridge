@@ -2,19 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Pressable, Platform, TextInput } from 'react-native';
 import COLORS from '../../../constants/Colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import SIZES from '../../../constants/Sizes';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment';
+// import moment from 'moment';
 
 
-export default function DateTimeField({ date }) {
+export default function DateTimeField({date}) {
 
   // const [date, setDate] = useState(new Date());
   // const [showPicker, setShowPicker] = useState(false);
 
-
-  // // State variables for fields
-  // const [datePlan, setDatePlan] = useState('');
   const formatDate = (rawDate) => {
     let date = new Date(rawDate);
 
@@ -71,7 +67,7 @@ const onChange = ({ type }, selectedDate) => {
 
       )}
 
-      {showPicker && Platform.OS === 'ios' && (
+      {/* {showPicker && Platform.OS === 'ios' && (
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <TouchableOpacity style={[
             styles.button,
@@ -95,7 +91,7 @@ const onChange = ({ type }, selectedDate) => {
             { color: COLORS.lightGray }]}>Confirm</Text>
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
 
       {!showPicker && (
         <Pressable onPress={toggleDatePicker} style={{
@@ -158,9 +154,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
 });
-
-
-
-
 
 

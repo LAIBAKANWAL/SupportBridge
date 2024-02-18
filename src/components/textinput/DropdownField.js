@@ -9,36 +9,37 @@ const DropdownField = ({ options,
   placeholder,
   zIndex,
   showTickIcon,
-  error
+  error,
+  onFocus = () => { }, ...props
   }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
     
     useEffect(() => {
       // Set the initial value when it changes
-      setIsOpen(false); // Close the dropdown when the initial value changes
+      setIsFocused(false); // Close the dropdown when the initial value changes
     }, [initialValue]);
 
     const toggleDropdown = () => {
-      setIsOpen(!isOpen);
+      setIsFocused(!isFocused);
     };
   
 
     const handleValueChange = (value) => {
       onValueChange(value); // Pass the selected value to the parent component
-      setIsOpen(false);
+      setIsFocused(false);
     };
 
   return (
     <View style={{  marginBottom: 12}}>
  <DropdownPicker
-      open={isOpen}
+      open={isFocused}
       value={initialValue}
       items={options}
       setOpen={toggleDropdown}
       setValue={handleValueChange}
       placeholder={placeholder}
       style={{
-        borderColor: isOpen ? COLORS.primary : COLORS.lightGray,
+        borderColor: error ? COLORS.red : isFocused ? COLORS.primary : COLORS.lightGray,
         backgroundColor:"transparent"
       }}
       zIndex={zIndex}

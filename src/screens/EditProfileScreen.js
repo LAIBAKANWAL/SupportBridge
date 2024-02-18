@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, Keyboard } from "react-native";
+import { Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, Keyboard, Pressable } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import SIZES from "../../constants/Sizes";
@@ -9,13 +9,12 @@ import Label from "../components/Label";
 import InputField from "../components/textinput/InputField";
 import Button from "../components/Button";
 import DropdownField from "../components/textinput/DropdownField";
-import DateTimeField from "../components/textinput/DateTimeField";
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modal';
 import styles from "./create.style";
+import Loader from '../components/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export default function EditProfileScreen() {
 
@@ -31,6 +30,8 @@ export default function EditProfileScreen() {
   const [id, setid] = useState();
 
   const [alldata, setalldata] = useState({});
+  const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
+  const [isBlurVisible, setBlurVisible] = useState(false);
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ export default function EditProfileScreen() {
         setDob(alldata.dob);
       }
       if (alldata.profile_image) {
-        setDob(alldata.dob);
+        setProfile(alldata.profile_image);
       }
     }
   }, [alldata]);
@@ -86,8 +87,9 @@ export default function EditProfileScreen() {
 
         const userData = JSON.parse(storedUserData);
         console.log('Retrieved login data from AsyncStorage:', userData);
-        setid(userData);
-        getdata(userData);
+        setid(userData.id);
+
+        getdata(userData.id);
         return userData;
 
       } else {
@@ -101,21 +103,17 @@ export default function EditProfileScreen() {
   };
 
 
-
   const getdata = async (id) => {
-    setLoading(true);
     try {
       const response = await axios.get(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`);
-      // console.log(response);
+
       console.log('save Successfully:', response.data);
       setalldata(response.data.data);
       setLoading(false);
-
     }
     catch (error) {
       setLoading(false);
       console.error('Error saving profile:', error.response.data);
-      Alert.alert('Error', 'Save failed. Please try again.'); // Show an alert or handle the error as needed
     }
   };
 
@@ -158,39 +156,35 @@ export default function EditProfileScreen() {
   };
 
   const save = async () => {
-
     setLoading(true);
-    // navigation.navigate("Home");
+
     try {
       const response = await axios.post(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`, {
-        // name: inputs.fullname,
+        profile_image: profile,
         name: name,
-        gender: gender,
-        // about:inputs.about,
         about: about,
-        // dob: dob,
+        gender: gender,
+        dob: dob,
         phone: phonenumber,
         email: email,
       });
 
       console.log('save Successfully:', response.data);
 
-      Alert.alert('Success', 'you are successfully save');
       setLoading(false);
-      navigation.navigate("Home");
+      openModal();
     }
     catch (error) {
       setLoading(false);
       console.error('Error saving profile:', error.response.data);
-      Alert.alert('Error', 'Save failed. Please try again.'); // Show an alert or handle the error as needed
     }
   };
 
 
-  // console.log(inputs)
   const handleError = (errorMessage, input) => {
     setErrors(prevState => ({ ...prevState, [input]: errorMessage }));
   }
+
 
 
 
@@ -233,8 +227,22 @@ export default function EditProfileScreen() {
   const handleCategoryChange = (value) => {
     setGender(value)
   };
+
+  const openModal = () => {
+    setSubmitModalVisible(true);
+    setBlurVisible(true);
+  };
+
+  const closeModal = () => {
+    setSubmitModalVisible(false);
+    navigation.navigate("Home");
+  };
+
+
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+      <Loader visible={loading} />
       <View style={{ marginHorizontal: SIZES.small - 6 }}>
         <Header
           title="Fill Your Profile"
@@ -260,7 +268,7 @@ export default function EditProfileScreen() {
             <MaterialIcons name="chat" size={15} color="#DFD8C8"></MaterialIcons>
           </TouchableOpacity>
           <View style={styles.active}></View>
-          <TouchableOpacity style={styles.add}   activeOpacity={0.7} onPress={toggleModal}>
+          <TouchableOpacity style={styles.add} activeOpacity={0.7} onPress={toggleModal}>
             <MaterialIcons name="edit" size={20} color="#DFD8C8" ></MaterialIcons>
           </TouchableOpacity>
 
@@ -307,18 +315,18 @@ export default function EditProfileScreen() {
 
 
           <Label text="Something about you" />
-            <InputField
-              placeholder="write about yourself ....."
-              value={about}
-              onChange={text => setAbout(text)}
-              error={errors.about}
-              onFocus={() => {
-                handleError(null, 'about');
-              }}
-              keyboardType="default"
-              multiline={true}
-              numberOfLines={3}
-            />
+          <InputField
+            placeholder="write about yourself ....."
+            value={about}
+            onChange={text => setAbout(text)}
+            error={errors.about}
+            onFocus={() => {
+              handleError(null, 'about');
+            }}
+            keyboardType="default"
+            multiline={true}
+            numberOfLines={3}
+          />
 
 
           <Label text="Gender" />
@@ -331,7 +339,13 @@ export default function EditProfileScreen() {
           />
 
           <Label text="Date of birth" />
-          <DateTimeField date={dob} />
+          <InputField
+            value={dob}
+            placeholder="mm-dd-yyyy"
+            keyboardType="numeric"
+            onChange={text => setDob(text)}
+            iconComponent={<MaterialIcons name="date-range" size={24} color={COLORS.grey} />}
+          />
 
         </View>
 
@@ -380,13 +394,44 @@ export default function EditProfileScreen() {
         <Button
           title="Save"
           filled
-          onPress={()=>navigation.navigate('Home')}
-          // onPress={validate}
+          onPress={validate}
           style={{
             marginTop: 20,
             marginBottom: 40,
           }}
         />
+
+        <View centeredView>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isSubmitModalVisible}
+            onRequestClose={closeModal}
+            style={styles.modalBox}
+          >
+            <View style={[styles.modalBox, isBlurVisible && styles.blurBackground]}>
+              <View style={styles.modalView}>
+                <View style={{ alignItems: "center" }}>
+                  <Image source={require('../../assets/images/check.png')}
+                    style={{
+                      marginBottom: 20
+                    }}
+                  />
+                </View>
+                <Text style={styles.boxText(SIZES.xLarge)}>Save Successfully!</Text>
+                <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>Your profile updated Successfully.</Text>
+                <Button
+                  onPress={closeModal} // Ensure this calls the submit function for navigation
+                  title="OK"
+                  filled={true}
+                  width='100%'
+                />
+              </View>
+            </View>
+          </Modal>
+
+        </View>
+
 
       </ScrollView>
     </SafeAreaView>

@@ -1,4 +1,3 @@
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, Image, TouchableWithoutFeedback, Pressable, StyleSheet, SafeAreaView, Keyboard, Alert, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../../constants/Colors';
@@ -16,6 +15,8 @@ import axios from 'axios';
 const Signup = () => {
 
     const navigation = useNavigation();
+    const [isChecked, setIsChecked] = useState(false);
+
 
     const [accountType, setAccountType] = useState(null);
     const handleBoxPress = (type) => {
@@ -197,6 +198,8 @@ const Signup = () => {
 
                 <Checkbox
                     label="Remember me"
+                    isChecked={isChecked}
+                    onPress={() => setIsChecked(!isChecked)}
                 />
 
                 <Button

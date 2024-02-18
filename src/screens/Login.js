@@ -9,13 +9,13 @@ import Label from '../components/Label';
 import Checkbox from '../components/checkbox/Checkbox';
 import Loader from '../components/Loader';
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
- import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Login() {
 
     const navigation = useNavigation();
+    const [isChecked, setIsChecked] = useState(false);
     
     const [inputs, setInputs] = useState({
         cnic: "00000-0000000-0",
@@ -41,18 +41,6 @@ export default function Login() {
             login();
         }
     };
-    // const showToast = (type, text) => {
-    //     Toast.show({
-    //         type: type, // 'success', 'error', 'info', 'warn'
-    //         text1: 'Error', // Title of the toast
-    //         text2: text, // Content of the toast
-    //         position: 'bottom', // 'top' or 'bottom'
-    //         visibilityTime: 3000, // Toast display duration in milliseconds
-    //         autoHide: true,
-    //         bottomOffset: 40, // Vertical offset from the bottom
-    //     });
-    // };
-
 
     const saveLoginDataToStorage = async (userData) => {
         try {
@@ -80,8 +68,9 @@ export default function Login() {
                 setLoading(false);
                 console.log('Login Successful:', response.data);
                 
-                await saveLoginDataToStorage(response.data.data.id);
-                console.log(response.data.data.id);
+                await saveLoginDataToStorage(response.data.data);
+                // await saveLoginDataToStorage(response.data.data.name);
+                // console.log(response.data.data);
                 navigation.navigate("EditProfileScreen");
 
             } else {
@@ -154,9 +143,10 @@ export default function Login() {
                 />
 
 
-
                 <Checkbox
                     label="Remember me"
+                    isChecked={isChecked}
+                    onPress={() => setIsChecked(!isChecked)}
                 />
 
                 <Button

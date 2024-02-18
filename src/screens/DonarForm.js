@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import styles from './create.style';
 import Label from '../components/Label';
 import DropdownField from '../components/textinput/DropdownField';
+import Loader from '../components/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,12 +25,12 @@ export default function DonarForm() {
     const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
     const [isBlurVisible, setBlurVisible] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    
+
     const navigation = useNavigation();
 
     const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
     const [allcategories, setAllCategories] = useState();
+    const [description, setDescription] = useState();
     const [term, setTerm] = useState();
 
     const [errors, setErrors] = useState({});
@@ -47,9 +48,8 @@ export default function DonarForm() {
 
     useEffect(() => {
         getLoginDataFromStorage();
-        // getdata();
-    
-      }, []);
+
+    }, []);
 
     useEffect(() => {
         if (description && description.length > 200) {
@@ -59,41 +59,24 @@ export default function DonarForm() {
 
     const getLoginDataFromStorage = async () => {
         try {
-          const storedUserData = await AsyncStorage.getItem('user_data');
-          if (storedUserData) {
-    
-            const userData = JSON.parse(storedUserData);
-            console.log('Retrieved login data from AsyncStorage:', userData);
-            setid(userData);
-            getdata(userData);
-            return userData;
-    
-          } else {
-            console.log('No login data found in AsyncStorage.');
-            return null;
-          }
+            const storedUserData = await AsyncStorage.getItem('user_data');
+            if (storedUserData) {
+
+                const userData = JSON.parse(storedUserData);
+                console.log('Retrieved login data from AsyncStorage:', userData);
+                setid(userData.id);
+                return userData;
+
+            } else {
+                console.log('No login data found in AsyncStorage.');
+                return null;
+            }
         } catch (error) {
-          console.error('Error retrieving login data from AsyncStorage:', error);
-          return null;
+            console.error('Error retrieving login data from AsyncStorage:', error);
+            return null;
         }
-      };
-    
-      const getdata = async (id) => {
-        setLoading(true);
-        try {
-          const response = await axios.get(`https://app-api.demo-customwebsites.com/api/fund-list/${id}`);
-          // console.log(response);
-        //   console.log('save Successfully:', response.data);
-        //   setalldata(response.data.data);
-          setLoading(false);
-    
-        }
-        catch (error) {
-          setLoading(false);
-        //   console.error('Error saving profile:', error.response.data);
-          Alert.alert('Error', 'Save failed. Please try again.'); // Show an alert or handle the error as needed
-        }
-      };
+    };
+
 
     const maxImageLimit = 5;
 
@@ -177,6 +160,7 @@ export default function DonarForm() {
 
     const closeModal = () => {
         setSubmitModalVisible(false);
+        navigation.navigate("Home");
     };
 
 
@@ -185,12 +169,12 @@ export default function DonarForm() {
 
         let valid = true;
 
-          
-    // Check if at least one image is selected
-    if (selectedImages.length === 0) {
-        Alert.alert('Please select at least one image.');
-        valid = false;
-    }
+
+        // Check if at least one image is selected
+        if (selectedImages.length === 0) {
+            Alert.alert('Please select at least one image.');
+            valid = false;
+        }
         // title validation
         if (!title) {
             handleError('Please enter title.', 'title');
@@ -214,58 +198,39 @@ export default function DonarForm() {
             valid = false;
         }
 
-         // Checkbox validation
-    if (!isChecked) {
-        handleError('Please agree to the terms & conditions.', 'term');
-        // Alert.alert('Please agree to the terms & conditions.');
-        valid = false;
-    }
+        // Checkbox validation
+        if (!isChecked) {
+            handleError('Please agree to the terms & conditions.', 'term');
+            valid = false;
+        }
 
         if (valid) {
-            // setLoading(true);
-            // setTimeout(() => {
-            //     setLoading(false);
-            //     openModal();
-            // }, 3000)
             submit();
         }
     };
 
 
-
-    // const submit = () => {
-    //     // console.log('Submit function called');
-    //     closeModal(); // Close the submit modal
-    //     navigation.navigate("Home"); // Navigate to the Home screen
-    // }
-
     const submit = async () => {
 
         setLoading(true);
         try {
-          const response = await axios.post(`https://app-api.demo-customwebsites.com/api/fund-list/${id}`, {
-            title: title,
-            category: allcategories,
-            description: description,
-            terms_accept: term
-          });
-    
-          console.log('Create Successfully:', response.data);
-    
-          Alert.alert('Success', 'you are successfully create');
-          setLoading(false);
-          closeModal();
-          navigation.navigate("Home");
+            const response = await axios.post(`https://app-api.demo-customwebsites.com/api/create-fund-request`, {
+                title: title,
+                category: allcategories,
+                description: description,
+                terms_accept: isChecked ? "yes" : "no",
+                user_id: id,
+            });
+
+            console.log('Create Successfully:', response.data);
+
+            setLoading(false);
+            openModal();
         }
         catch (error) {
-          setLoading(false);
-          console.error('Error saving profile:', error.response.data);
-          Alert.alert('Error', 'Save failed. Please try again.'); // Show an alert or handle the error as needed
+            setLoading(false);
+            console.error('Error creatig fund failed:', error.response.data);
         }
-      };
-
-    const handleOnChange = (text, input) => {
-        setInputs(prevState => ({ ...prevState, [input]: text }));
     };
 
     // console.log(inputs)
@@ -275,7 +240,7 @@ export default function DonarForm() {
 
     const handleCategoryChange = (value) => {
         setAllCategories(value)
-      };
+    };
 
 
     return (
@@ -364,7 +329,7 @@ export default function DonarForm() {
 
                     <Label text="Title" icon iconPosition={33} />
                     <InputField
-                    value={title}
+                        value={title}
                         placeholder="Title"
                         keyboardType="default"
                         // onChange={text => handleOnChange(text, 'title')}
@@ -382,13 +347,16 @@ export default function DonarForm() {
                         initialValue={allcategories}
                         onValueChange={handleCategoryChange}
                         placeholder="Select Category"
-                        error={errors.categories}
+                        error={errors.allcategories}
+                        onFocus={() => {
+                            handleError(null, 'allcategories');
+                        }}
                     />
 
 
                     <Label text="Description" icon iconPosition={81} />
                     <InputField
-                     placeholder="write details about item ....."
+                        placeholder="write details about item ....."
                         value={description}
                         error={errors.description}
                         onChange={text => setDescription(text)}
@@ -400,25 +368,24 @@ export default function DonarForm() {
                         numberOfLines={3}
                     />
 
-
+                    <Checkbox
+                        label="By checking this, you agree to the terms & conditions that apply to us."
+                        isChecked={isChecked}
+                        onPress={() => setIsChecked(!isChecked)}
+                    />
+                    <Text style={{ color: COLORS.red, fontSize: 13, }}>{errors.term}</Text>
 
 
 
                 </View>
 
 
-                <Checkbox
-                    label="By checking this, you agree to the terms & conditions that apply to us."
-                    isChecked={isChecked}
-                    onPress={() => setIsChecked(!isChecked)}
-                />
-                <Text style={{ color: COLORS.red, fontSize: 13,}}>{errors.term}</Text>
+
 
                 <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
 
 
                 <Button
-                    //   onPress={openModal}
                     onPress={validate}
                     title="Create & Submit"
                     filled={true}
@@ -442,26 +409,17 @@ export default function DonarForm() {
                                 <View style={{ alignItems: "center" }}>
                                     <Image source={require('../../assets/images/check.png')}
                                         style={{
-                                            // marginTop: 20,
                                             marginBottom: 20
-                                            // height: 90,
-                                            // width: 210,
-                                            // position: "absolute",
-                                            // top: 10 
                                         }}
                                     />
                                 </View>
                                 <Text style={styles.boxText(SIZES.xLarge)}>Submit Successful!</Text>
-                                <Text style={styles.textStyle}>We are currently reviewing a fundraising proposal for your donation. We will tell you the result soon.</Text>
+                                <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are currently reviewing a fundraising proposal for your donation. We will tell you the result soon.</Text>
                                 <Button
-                                    onPress={submit} // Ensure this calls the submit function for navigation
+                                    onPress={closeModal} // Ensure this calls the submit function for navigation
                                     title="OK"
                                     filled={true}
                                     width='100%'
-                                // style={{
-                                //   marginTop: 18,
-                                //   marginBottom: 20
-                                // }}
                                 />
                             </View>
                         </View>
