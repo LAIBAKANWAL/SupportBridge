@@ -32,6 +32,7 @@ import Users from './src/screens/Users';
 import Items from './src/screens/Items';
 import ReceiverRequest from './src/screens/ReceiverRequest';
 import Categories from './src/screens/Categories';
+import RequestInfo from './src/screens/RequestInfo';
 
 export{
     Signup,
@@ -57,5 +58,6 @@ export{
     Users,
     Items,
     ReceiverRequest,
-    Categories
+    Categories,
+    RequestInfo
 }

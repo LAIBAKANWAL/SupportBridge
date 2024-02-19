@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from '@react-navigation/stack';
-import { Signup, Login, Onboarding, Search, BottomNavigation, FundraiserDetails, Donation, Payment, Setting, EditProfileScreen, NotificationScreen, SecurityScreen, HelpScreen, AccountDelete, Inbox,CreatePassword,MainNotification,AllCategories,Users ,Items,ReceiverRequest, Categories} from '../../index';
+import { Signup, Login, Onboarding, Search, BottomNavigation, FundraiserDetails, Donation, Payment, Setting, EditProfileScreen, NotificationScreen, SecurityScreen, HelpScreen, AccountDelete, Inbox,CreatePassword,MainNotification,AllCategories,Users ,Items,ReceiverRequest, Categories,RequestInfo} from '../../index';
 
 
 const Stack = createStackNavigator();
@@ -169,6 +169,14 @@ const StackNavigator = () => {
              <Stack.Screen
                 name="Categories"
                 component={Categories}
+                options={{
+                    headerShown: false, // Hide the default header
+                }}
+                
+            />
+             <Stack.Screen
+                name="RequestInfo"
+                component={RequestInfo}
                 options={{
                     headerShown: false, // Hide the default header
                 }}

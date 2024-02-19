@@ -5,8 +5,8 @@ import SIZES from '../../constants/Sizes';
 import COLORS from '../../constants/Colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
-
-
+import Button from '../components/Button';
+import InputField from '../components/textinput/InputField';
 
 const Categories = () => {
     const [isEditModalVisible, setEditModalVisible] = useState(false);
@@ -14,14 +14,14 @@ const Categories = () => {
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryImage, setNewCategoryImage] = useState(null);
     const [isAddModalVisible, setAddModalVisible] = useState(false);
-    const [isAddingCategory, setIsAddingCategory] = useState(false);
-
+    const [isBlurVisible, setBlurVisible] = useState(false);
 
     const [categoryData, setCategoryData] = useState([
-        { id: '1', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
-        { id: '2', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
-        { id: '3', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
-        { id: '4', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
+        { id: '1', categoryName: 'Education', image: require('../../assets/images/education.png') },
+        { id: '2', categoryName: 'Humaninty', image: require('../../assets/images/icon1.png') },
+        { id: '3', categoryName: 'Disaster', image: require('../../assets/images/world.png') },
+        { id: '4', categoryName: 'Medical', image: require('../../assets/images/medical.png') },
+        { id: '5', categoryName: 'Social', image: require('../../assets/images/awareness.png') },
     ]);
 
 
@@ -30,6 +30,7 @@ const Categories = () => {
         setNewCategoryName(category.categoryName);
         setNewCategoryImage(null);
         setEditModalVisible(true);
+        setBlurVisible(true);
     };
 
     const closeEditModal = () => {
@@ -81,9 +82,9 @@ const Categories = () => {
                     alignItems: "center",
                 }}
             >
-                <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
+                <View style={{ backgroundColor: '#ebf0ed', borderRadius: 10, alignItems: "center", justifyContent: "center", padding: 5 }}>
                     <Image
-                        style={{ width: 60, height: 60, resizeMode: 'cover' }}
+                        style={{ width: 50, height: 50, resizeMode: 'cover' }}
                         source={item.image}
                     />
                 </View>
@@ -130,7 +131,8 @@ const Categories = () => {
             const newCategory = {
                 id: `${Date.now()}`,
                 categoryName: newCategoryName,
-                image: newCategoryImage || require('../../assets/images/placeholder.png'), // Use selected image or default
+                // image: newCategoryImage || require('../../assets/images/placeholder.png'), // Use selected image or default
+                image: newCategoryImage ? { uri: newCategoryImage } : require('../../assets/images/placeholder.png'),
             };
 
             // Update the state with the new category
@@ -151,13 +153,12 @@ const Categories = () => {
             <View style={{ marginHorizontal: SIZES.medium, marginBottom: 115 }}>
                 <Header title="Categories" showBackButton />
 
-                <TouchableOpacity style={{ flexDirection: 'row-reverse' }} onPress={() => setAddModalVisible(true)}>
+                <TouchableOpacity style={{ flexDirection: 'row-reverse' }} onPress={() => { setAddModalVisible(true), setBlurVisible(true) }}>
                     <AntDesign name="plus" size={30} color={COLORS.grey} />
                 </TouchableOpacity>
 
                 <FlatList
                     data={categoryData}
-                    // data={isAddModalVisible ? [{ id: 'placeholder' }] : categoryData}
                     keyExtractor={(item) => item.id}
                     renderItem={renderItem}
                 />
@@ -170,28 +171,35 @@ const Categories = () => {
                     visible={isEditModalVisible}
                     onRequestClose={closeEditModal}
                 >
-                    <View style={styles.modalContainer}>
+                    <View style={[styles.modalContainer, isBlurVisible && styles.blurBackground]}>
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>Edit Category</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="New Category Name"
+                            <InputField
                                 value={newCategoryName}
-                                onChangeText={(text) => setNewCategoryName(text)}
+                                placeholder="New Category Name"
+                                keyboardType="default"
+                                onChange={(text) => setNewCategoryName(text)}
                             />
-                            <TouchableOpacity onPress={pickImage} style={styles.pickImageButton}>
-                                <Text style={styles.buttonText}>Pick Image</Text>
-                            </TouchableOpacity>
                             {newCategoryImage && (
                                 <Image source={{ uri: newCategoryImage }} style={styles.previewImage} />
                             )}
+                            <TouchableOpacity onPress={pickImage} style={styles.pickImageButton} activeOpacity={0.7}>
+                                <Text style={styles.buttonText}>Pick Image</Text>
+                            </TouchableOpacity>
+
                             <View style={styles.modalButtons}>
-                                <TouchableOpacity onPress={handleEditCategory} style={[styles.button, styles.saveButton]}>
-                                    <Text style={styles.buttonText}>Save</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={closeEditModal} style={[styles.button, styles.cancelButton]}>
-                                    <Text style={styles.buttonText}>Cancel</Text>
-                                </TouchableOpacity>
+                                <Button
+                                    onPress={handleEditCategory}
+                                    title="save"
+                                    filled={true}
+                                    width='47%'
+                                />
+                                <Button
+                                    onPress={closeEditModal}
+                                    title="Cancel"
+                                    filled={false}
+                                    width='47%'
+                                />
                             </View>
                         </View>
                     </View>
@@ -203,33 +211,41 @@ const Categories = () => {
                     visible={isAddModalVisible}
                     onRequestClose={() => setAddModalVisible(false)}
                 >
-                    <View style={styles.modalContainer}>
+                    <View style={[styles.modalContainer, isBlurVisible && styles.blurBackground]}>
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>Add New Category</Text>
                             {/* Input field for new category name */}
-                            <TextInput
-                                style={styles.input}
+                            <InputField
+                                   value={newCategoryName}
                                 placeholder="New Category Name"
-                                value={newCategoryName}
-                                onChangeText={(text) => setNewCategoryName(text)}
+                                keyboardType="default"
+                                onChange={(text) => setNewCategoryName(text)}
                             />
-                            {/* Button to pick an image for the new category */}
-                            <TouchableOpacity onPress={pickImage} style={styles.pickImageButton}>
-                                <Text style={styles.buttonText}>Pick Image</Text>
-                            </TouchableOpacity>
                             {/* Display selected image */}
 
                             {newCategoryImage && (
                                 <Image source={{ uri: newCategoryImage }} style={styles.previewImage} />
                             )}
+                            {/* Button to pick an image for the new category */}
+                            <TouchableOpacity onPress={pickImage} style={styles.pickImageButton}>
+                                <Text style={styles.buttonText}>Pick Image</Text>
+                            </TouchableOpacity>
+
                             {/* Buttons for Save and Cancel */}
                             <View style={styles.modalButtons}>
-                                <TouchableOpacity onPress={handleAddCategory} style={[styles.button, styles.saveButton]}>
-                                    <Text style={styles.buttonText}>Save</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setAddModalVisible(false)} style={[styles.button, styles.cancelButton]}>
-                                    <Text style={styles.buttonText}>Cancel</Text>
-                                </TouchableOpacity>
+                                <Button
+                                    onPress={handleAddCategory}
+                                    title="Create"
+                                    filled={true}
+                                    width='47%'
+                                />
+                                <Button
+                                    onPress={() => setAddModalVisible(false)}
+                                    title="Cancel"
+                                    filled={false}
+                                    width='47%'
+                                />
+
                             </View>
                         </View>
                     </View>
@@ -249,7 +265,7 @@ const styles = StyleSheet.create({
     notificationTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: COLORS.grey,
+        color: COLORS.black,
     },
     modalContainer: {
         flex: 1,
@@ -268,7 +284,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         textAlign: 'center',
-        color: COLORS.grey
+        color: COLORS.black
     },
     input: {
         borderColor: '#ccc',
@@ -295,21 +311,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    button: {
-        padding: 10,
-        borderRadius: 5,
-        width: '45%',
-        alignItems: 'center',
-    },
-    saveButton: {
-        backgroundColor: '#0ec43f',
-    },
-    cancelButton: {
-        backgroundColor: '#e30e2a',
-    },
     buttonText: {
         color: COLORS.white,
         fontWeight: 'bold',
+    },
+    blurBackground: {
+        backgroundColor: 'rgba(0, 10, 0, 0.5)',
     },
 });
 

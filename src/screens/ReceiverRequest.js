@@ -3,18 +3,17 @@ import { View, Text, TouchableOpacity, FlatList, SafeAreaView, Pressable, Image,
 import Header from '../components/Header';
 import SIZES from '../../constants/Sizes';
 import COLORS from '../../constants/Colors';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useNavigation } from '@react-navigation/native';
+import Button from '../components/Button';
 
 const categoryData = [
-    { id: '1', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
-    { id: '2', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
-    { id: '3', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
-    { id: '4', categoryName: 'Education', image: require('../../assets/images/profile-pic.jpg') },
+    { id: '1', name: 'Laibo', cnic: '23101-4256785-6', date:'2023-04-15 14:29:28', image: require('../../assets/images/profile-pic.jpg') },
+    { id: '2', name: 'Laibo', cnic: '23101-4256785-6', date:'2023-04-15 14:29:28', image: require('../../assets/images/profile-pic.jpg') },
 ];
 
 
 const ReceiverRequest = () => {
-  
+    const navigation = useNavigation();
     const accountRemove = () =>{
         Alert.alert('Are you sure to delete?','',
         [
@@ -54,20 +53,16 @@ const ReceiverRequest = () => {
                 </View>
 
                 <View style={{ marginLeft: 10, flex: 1 }}>
-                    <Text style={styles.notificationTitle}>{item.categoryName}</Text>
-                    {/* <Text style={styles.notificationMessage}>{item.category}</Text>
-                    <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{item.status}</Text> */}
+                    <Text style={styles.notificationTitle}>{item.name} ({item.cnic})</Text>
+                    {/* <Text style={styles.notificationMessage}>{item.category}</Text> */}
+                    <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{item.date} </Text>
                 </View>
-
-
-                <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity>
-                        <AntDesign name="edit" size={40} color="#0ec43f" />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={accountRemove}>
-                        <AntDesign name="delete" size={30} color="#e30e2a" />
-                    </TouchableOpacity>
-                </View>
+                <Button
+                                    onPress={()=> navigation.navigate("RequestInfo")}
+                                    title="Details"
+                                    filled={true}
+                                    width='30%'
+                                />
 
             </Pressable>
 
@@ -81,7 +76,7 @@ const ReceiverRequest = () => {
             <View style={{ marginHorizontal: SIZES.medium }}>
 
                 <Header
-                    title="Categories"
+                    title="Receiver Request"
                     showBackButton
                 />
 
