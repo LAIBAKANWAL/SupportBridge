@@ -37,7 +37,8 @@ const AccountDelete = () => {
       },
     },
   ],
-  { cancelable: false });
+  { cancelable: false,  alertContainerStyle: { backgroundColor: COLORS.white }, });
+  
   };
 
   return (

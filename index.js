@@ -28,6 +28,10 @@ import ReceiverForm from './src/screens/ReceiverForm';
 import CreatePassword from './src/screens/CreatePassword';
 import MainNotification from './src/screens/MainNotification';
 import AllCategories from './src/screens/AllCategories';
+import Users from './src/screens/Users';
+import Items from './src/screens/Items';
+import ReceiverRequest from './src/screens/ReceiverRequest';
+import Categories from './src/screens/Categories';
 
 export{
     Signup,
@@ -49,5 +53,9 @@ export{
     ReceiverForm,
     CreatePassword,
     MainNotification,
-    AllCategories
+    AllCategories,
+    Users,
+    Items,
+    ReceiverRequest,
+    Categories
 }

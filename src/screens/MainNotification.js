@@ -10,6 +10,7 @@ const notificationsData = [
   { id: '2', title: '', message: 'Your Ad is live!', image: require('../../assets/images/pro.jpg') },
   { id: '3', title: '', message: 'You deleted your Ad', image: require('../../assets/images/awareness.png') },
   { id: '4', title: '', message: 'You deleted your Ad', image: require('../../assets/images/awareness.png') },
+  { id: '5', title: '', message: 'Wooden Dining Table Set',image: require('../../assets/images/placeholder.png')},
   // Add more notification data as needed
 ];
 
@@ -30,7 +31,8 @@ const MainNotification = () => {
           <Image
             style={{ width: 60, height: 60, resizeMode: 'cover' }}
             source={item.image}
-          />
+    />
+          
         </View>
 
         <View style={{ marginLeft: 10, flex: 1 }}>

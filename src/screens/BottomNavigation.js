@@ -7,7 +7,7 @@ import Profile from './Profile';
 import Saved from './Saved';
 import Create from './Create';
 import DonarForm from './DonarForm';
-import { ReceiverForm } from './ReceiverForm';
+import ReceiverForm from './ReceiverForm';
 import Admin from './Admin';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -66,8 +66,8 @@ const BottomNavigation = () => {
       />
       {/* ReceiverForm */}
       <Tab.Screen
-        name="DonarForm"
-        component={DonarForm}
+        name="ReceiverForm"
+        component={ReceiverForm}
         options={{
           tabBarStyle:{display:"none"},
           tabBarIcon: ({ focused }) => {
