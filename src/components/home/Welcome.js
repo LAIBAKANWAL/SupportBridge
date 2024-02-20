@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import Fonts from '../../../constants/Fonts';
 
-const Welcome = () => {
+const Welcome = ({name, accountType}) => {
     const navigation = useNavigation();
 
     return (
@@ -17,12 +17,19 @@ const Welcome = () => {
                     {" "}
                     Hello
                     {" "}
-                    <Text style={{ color: COLORS.primary }}>Laiba!</Text>
-                </Text>
-                <Text style={styles.welcomeTxt(COLORS.grey, SIZES.xSmall - 2, SIZES.large - 5, Fonts.medium)}>
-                    {" "}
-                    What for do you want to donate today?
-                </Text>
+                    <Text style={{ color: COLORS.primary }}>{name}!</Text>
+                </Text>               
+                {accountType === 'receiver' ? (
+                    <Text style={styles.welcomeTxt(COLORS.grey, SIZES.xSmall - 2, SIZES.large - 5, Fonts.medium)}>
+                        {" "}
+                      Receive items with a good vibes.
+                    </Text>
+                ) : (
+                    <Text style={styles.welcomeTxt(COLORS.grey, SIZES.xSmall - 2, SIZES.large - 5, Fonts.medium)}>
+                        {" "}
+                        What for do you want to donate today?
+                    </Text>
+                )}
             </View>
 
             <View style={styles.searchContainer}>
@@ -36,7 +43,7 @@ const Welcome = () => {
                         value=''
                         placeholderTextColor={"grey"}
                         onPressIn={() => navigation.navigate('Search')}
-                        placeholder='Search campaign'
+                        placeholder='Search item'
                     />
                 </View>
                 <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, height: 35, marginTop: 5 }}></View>

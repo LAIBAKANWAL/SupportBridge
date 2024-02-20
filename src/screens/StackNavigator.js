@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from '@react-navigation/stack';
-import { Signup, Login, Onboarding, Search, BottomNavigation, FundraiserDetails, Donation, Payment, Setting, EditProfileScreen, NotificationScreen, SecurityScreen, HelpScreen, AccountDelete, Inbox,CreatePassword,MainNotification,AllCategories,Users ,Items,ReceiverRequest, Categories,RequestInfo} from '../../index';
+import { Signup, Login, Onboarding, Search, BottomNavigation, FundraiserDetails, Donation, Payment, Setting, EditProfileScreen, NotificationScreen, SecurityScreen, HelpScreen, AccountDelete, Inbox, CreatePassword, MainNotification, AllCategories, Users, Items, ReceiverRequest, Categories, RequestInfo, DonarForm, ReceiverForm } from '../../index';
 
 
 const Stack = createStackNavigator();
@@ -122,41 +122,57 @@ const StackNavigator = () => {
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="MainNotification"
                 component={MainNotification}
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
- <Stack.Screen
+            <Stack.Screen
+                name="DonarForm"
+                component={DonarForm}
+                options={{
+                    headerShown: false, // Hide the default header
+                }}
+
+            />
+            <Stack.Screen
+                name="ReceiverForm"
+                component={ReceiverForm}
+                options={{
+                    headerShown: false, // Hide the default header
+                }}
+
+            />
+            <Stack.Screen
                 name="AllCategories"
                 component={AllCategories}
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
 
-<Stack.Screen
+            <Stack.Screen
                 name="Users"
                 component={Users}
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
 
-<Stack.Screen
+            <Stack.Screen
                 name="Items"
                 component={Items}
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
             <Stack.Screen
                 name="ReceiverRequest"
@@ -164,23 +180,23 @@ const StackNavigator = () => {
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="Categories"
                 component={Categories}
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="RequestInfo"
                 component={RequestInfo}
                 options={{
                     headerShown: false, // Hide the default header
                 }}
-                
+
             />
         </Stack.Navigator>
 

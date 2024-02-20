@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, Alert, SafeAreaView, ScrollView, Keyboard } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../constants/Colors';
@@ -9,7 +10,6 @@ import SIZES from '../../constants/Sizes';
 import InputField from '../components/textinput/InputField';
 import Button from '../components/Button';
 import Checkbox from '../components/checkbox/Checkbox';
-import { useNavigation } from '@react-navigation/native';
 import styles from './create.style';
 import Label from '../components/Label';
 import DropdownField from '../components/textinput/DropdownField';
@@ -17,8 +17,9 @@ import Loader from '../components/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export default function DonarForm() {
+    const navigation = useNavigation();
+
     const [isModalVisible, setModalVisible] = useState(false);
     const [isImageSelectModalVisible, setImageSelectModalVisible] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]); // Store selected images
@@ -26,7 +27,6 @@ export default function DonarForm() {
     const [isBlurVisible, setBlurVisible] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
 
-    const navigation = useNavigation();
 
     const [title, setTitle] = useState();
     const [allcategories, setAllCategories] = useState();
@@ -48,14 +48,13 @@ export default function DonarForm() {
 
     useEffect(() => {
         getLoginDataFromStorage();
-
-    }, []);
-
-    useEffect(() => {
+    
         if (description && description.length > 200) {
             handleError('Description is too long', 'description');
         }
+    
     }, [description]);
+    
 
     const getLoginDataFromStorage = async () => {
         try {
@@ -63,7 +62,7 @@ export default function DonarForm() {
             if (storedUserData) {
 
                 const userData = JSON.parse(storedUserData);
-                console.log('Retrieved login data from AsyncStorage:', userData);
+                // console.log('Retrieved login data from AsyncStorage:', userData);
                 setid(userData.id);
                 return userData;
 
@@ -153,17 +152,6 @@ export default function DonarForm() {
     );
 
 
-    const openModal = () => {
-        setSubmitModalVisible(true);
-        setBlurVisible(true);
-    };
-
-    const closeModal = () => {
-        setSubmitModalVisible(false);
-        navigation.navigate("Home");
-    };
-
-
     const validate = () => {
         Keyboard.dismiss();
 
@@ -210,12 +198,12 @@ export default function DonarForm() {
 
 
         if (valid) {
-            submit();
+            create();
         }
     };
 
 
-    const submit = async () => {
+    const create = async () => {
 
         setLoading(true);
         try {
@@ -238,7 +226,6 @@ export default function DonarForm() {
         }
     };
 
-    // console.log(inputs)
     const handleError = (errorMessage, input) => {
         setErrors(prevState => ({ ...prevState, [input]: errorMessage }));
     }
@@ -250,6 +237,30 @@ export default function DonarForm() {
         }
     };
 
+
+    const openModal = () => {
+        setSubmitModalVisible(true);
+        setBlurVisible(true);
+    };
+
+    const closeModal = () => {
+        setSubmitModalVisible(false);
+        resetState();
+        navigation.navigate('Home')
+
+        console.log("Navigating to Home");
+    };
+
+    const resetState = () => {
+        setSelectedImages([]);
+        setTitle('');
+        setAllCategories('');
+        setDescription('');
+        setTerm('');
+        setIsChecked(false);
+        setErrors({});
+        setLoading(false);
+    };
 
     return (
 
@@ -322,10 +333,10 @@ export default function DonarForm() {
 
                 </View>
 
-                <View style={{ marginHorizontal: SIZES.medium}}>
+                <View style={{ marginHorizontal: SIZES.medium }}>
 
                     <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
-                    <View style={{ flex: 1, marginHorizontal: SIZES.xSmall - 5}} >
+                    <View style={{ flex: 1, marginHorizontal: SIZES.xSmall - 5 }} >
                         <View>
                             <Text style={{
                                 fontSize: 22,
@@ -388,7 +399,7 @@ export default function DonarForm() {
                             }
                             }
                         />
-                        <Text style={{ color: COLORS.red, fontSize: 13,}}>{errors.term}</Text>
+                        <Text style={{ color: COLORS.red, fontSize: 13, }}>{errors.term}</Text>
 
 
                     </View>
@@ -424,7 +435,7 @@ export default function DonarForm() {
                                             }}
                                         />
                                     </View>
-                                    <Text style={styles.boxText(SIZES.xLarge)}>Submit Successful!</Text>
+                                    <Text style={styles.boxText(SIZES.xLarge - 2)}>Create Successfully!</Text>
                                     <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are currently reviewing a fundraising proposal for your donation. We will tell you the result soon.</Text>
                                     <Button
                                         onPress={closeModal} // Ensure this calls the submit function for navigation

@@ -43,42 +43,36 @@ export default function EditProfileScreen() {
 
   useEffect(() => {
     getLoginDataFromStorage();
-    // getdata();
-
-  }, []);
-
-  useEffect(() => {
 
     if (about && about.length > 150) {
-      handleError('Description is too long', 'about');
+        handleError('Description is too long', 'about');
     }
-  }, [about]);
 
-  useEffect(() => {
     if (alldata) {
-      if (alldata.name) {
-        setName(alldata.name);
-      }
-      if (alldata.phone) {
-        setPhoneNumber(alldata.phone);
-      }
-      if (alldata.email) {
-        setEmail(alldata.email);
-      }
-      if (alldata.about) {
-        setAbout(alldata.about);
-      }
-      if (alldata.gender) {
-        setGender(alldata.gender);
-      }
-      if (alldata.dob) {
-        setDob(alldata.dob);
-      }
-      if (alldata.profile_image) {
-        setProfile(alldata.profile_image);
-      }
+        if (alldata.name) {
+            setName(alldata.name);
+        }
+        if (alldata.phone) {
+            setPhoneNumber(alldata.phone);
+        }
+        if (alldata.email) {
+            setEmail(alldata.email);
+        }
+        if (alldata.about) {
+            setAbout(alldata.about);
+        }
+        if (alldata.gender) {
+            setGender(alldata.gender);
+        }
+        if (alldata.dob) {
+            setDob(alldata.dob);
+        }
+        if (alldata.profile_image) {
+            setProfile(alldata.profile_image);
+        }
     }
-  }, [alldata]);
+}, [about, alldata]);
+
 
   const getLoginDataFromStorage = async () => {
     try {
@@ -86,7 +80,7 @@ export default function EditProfileScreen() {
       if (storedUserData) {
 
         const userData = JSON.parse(storedUserData);
-        console.log('Retrieved login data from AsyncStorage:', userData);
+        // console.log('Retrieved login data from AsyncStorage:', userData);
         setid(userData.id);
 
         getdata(userData.id);
@@ -107,7 +101,7 @@ export default function EditProfileScreen() {
     try {
       const response = await axios.get(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`);
 
-      console.log('save Successfully:', response.data);
+      // console.log('save Successfully:', response.data);
       setalldata(response.data.data);
       setLoading(false);
     }

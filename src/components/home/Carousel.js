@@ -4,7 +4,6 @@ import COLORS from '../../../constants/Colors';
 import SIZES from '../../../constants/Sizes';
 import { slides } from '../Data';
 
-// const { width, height } = Dimensions.get('window');
 const Screen_width = Dimensions.get('window').width;
 
 
@@ -99,7 +98,6 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     width: '100%',
-    // height: height * 0.28,
     height: Screen_width - 150,
     borderRadius: 20,
     overflow: 'hidden',
