@@ -1,6 +1,6 @@
 // Fundraiser_Details.js
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, SafeAreaView, Pressable, Image, ScrollView, FlatList,Dimensions} from 'react-native';
 import Header from '../components/Header';
 import * as Progress from 'react-native-progress';
@@ -14,27 +14,50 @@ import { useNavigation } from '@react-navigation/native';
 import CardItem from '../components/CardItem';
 import styles from '../components/carditem.style';
 import { imageGallery } from '../components/Data';
+import axios from 'axios';
 
 const FundraiserDetails = ({ route }) => {
     const navigation = useNavigation();
+    const [fundDetails,setFundDetails] = useState({});
     // const { cardId, cardList } = route.params;
-    const { itemId, cardList } = route.params;
+    const { itemId} = route.params;
+    useEffect(() => {
+       getdata(itemId)
+    },[itemId]);
+    
    
+    console.log('id:',itemId)
+     
+    const getdata = async (id) => {
+        try {
+          const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-fund/${id}`);
+      
+          console.log('get fund details Successfully:', response.data);
+          setFundDetails(response.data.data);
+          console.log('show:',response.data.data)
+        //   setLoading(false);
+        }
+        catch (error) {
+        //   setLoading(false);
+          console.error('Error get fund details:', error.response.data);
+        }
+      };
     // const selectedCard = cardList.find((card) => card.id === cardId);
-    const selectedCard = cardList.find((card) => card.id === itemId);
+    // const selectedCard = cardList.find((card) => card.id === itemId);
+    // console.log(fundDetails.title)
 
     // console.warn(selectedCard)
     const [showFullText, setShowFullText] = useState(false);
 
     const storyText = 'Our campaign will focus on bridging the educational gap for children facing financial constraints. Many bright minds in our community lack access to basic educational resources, hindering their ability to reach their full potential. "Empowering Dreams" aims to provide school supplies, scholarships, and educational support to these deserving children.';
-
+console.log(fundDetails.title)
     const trimmedText = showFullText ? storyText : storyText.slice(0, 150);
     return (
         // marginHorizontal: SIZES.small - 3
         <SafeAreaView style={{ flex: 1, }}>
     
             <Header
-                title ={`${selectedCard.title} details`}
+                title ={`${fundDetails.title} details`}
                 showBackButton
                 showShareButton
                 fontSize={16}
@@ -42,7 +65,7 @@ const FundraiserDetails = ({ route }) => {
             <ScrollView style={{ flex: 1 }}>
     
                <CardItem
-                        item={selectedCard}
+                        item={fundDetails}
                         showHeartIcon={false}
                         disablePress={true}
                         searchView ={false}
@@ -51,7 +74,7 @@ const FundraiserDetails = ({ route }) => {
                         showDonationInfo={true}
                         imageView={false}
                         // data={imageGallery}
-                        // data={{selectedCard.image}}
+                        data={fundDetails.image1}
                         savedView={true}
                     />
 
@@ -60,7 +83,7 @@ const FundraiserDetails = ({ route }) => {
                     justifyContent: 'center'
                 }}>
                     <Button
-                    onPress={() => navigation.navigate('Donation',  { selectedCard })}
+                    onPress={() => navigation.navigate('Donation',  { fundDetails })}
                         title="Donate Now"
                         filled={true}
                         width='95%'
@@ -79,7 +102,7 @@ const FundraiserDetails = ({ route }) => {
                         <View style={{ width: 50, height: 50, backgroundColor: COLORS.lightGray, borderRadius: 35, padding: 32, alignItems: "center", justifyContent: "center" }}>
                             <Image
                                 style={{ width: 40, height: 40, resizeMode: "contain" }}
-                                source={selectedCard.image}
+                                source={fundDetails.image}
                             />
                         </View>
                         <View style={{ flex: 1, marginLeft: 10 }}>
@@ -146,6 +169,7 @@ const FundraiserDetails = ({ route }) => {
                 
             </ScrollView>
         </SafeAreaView>
+       
     );
 };
 

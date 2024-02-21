@@ -145,26 +145,7 @@ console.log(flattenedData)
     // Function to dynamically filter based on category
     return alldata.filter((item) => item.category === category);
   };
-
-  const time = alldata.map((item) => item.created_at)
-  console.log('time:',time)
-  const calculateDaysDifference = (dateString) => {
-    const currentDate = new Date();
-    const targetDate = new Date(dateString);
-    const differenceInMilliseconds = currentDate - targetDate;
-    const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-    return differenceInDays;
-  };
-
-  const formatDaysDifference = (days) => {
-    if (days === 0) {
-      return 'Today';
-    } else if (days === 1) {
-      return '1 day ago';
-    } else {
-      return `${days} days ago`;
-    }
-  };
+ 
   // const organizeDataByCategory = () => {
   //   const organizedData = {};
     

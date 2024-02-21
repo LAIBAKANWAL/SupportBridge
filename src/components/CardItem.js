@@ -38,8 +38,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
         ? undefined // Set to undefined to disabe onPress
         // : () => navigation.navigate('FundraiserDetails', { cardId: item.id, cardList: {list} });
         // : () => navigation.navigate('FundraiserDetails', { cardId: item.id, cardList: data });
-        : () => navigation.navigate('FundraiserDetails', { itemId: item.id, cardList: data  });
-
+        : () => navigation.navigate('FundraiserDetails', { itemId: item.id});
 
     const calculateDaysDifference = (dateString) => {
         const currentDate = new Date();
@@ -115,7 +114,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                             pagingEnabled
                             onScroll={handleScroll}
                             scrollEventThrottle={0}
-                            data={data}
+                        //    data={data}
                             keyExtractor={item => item.id}
                             renderItem={({ item }) => {
                                 if (!item.uri) return <View style={{ width: 0 }} />
