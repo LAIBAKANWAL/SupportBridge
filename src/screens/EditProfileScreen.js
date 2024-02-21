@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, Keyboard, Pressable } from "react-native";
+import React, { useState, useEffect} from "react";
+import { Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, Keyboard,Alert, Pressable } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import SIZES from "../../constants/Sizes";
@@ -68,7 +68,7 @@ export default function EditProfileScreen() {
             setDob(alldata.dob);
         }
         if (alldata.profile_image) {
-            setProfile(alldata.profile_image);
+            setProfile("https://app-api.demo-customwebsites.com/" + alldata.profile_image);
         }
     }
 }, [about, alldata]);
@@ -100,14 +100,14 @@ export default function EditProfileScreen() {
   const getdata = async (id) => {
     try {
       const response = await axios.get(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`);
-
+  
       // console.log('save Successfully:', response.data);
       setalldata(response.data.data);
       setLoading(false);
     }
     catch (error) {
       setLoading(false);
-      console.error('Error saving profile:', error.response.data);
+      console.error('Error get saving profile:', error.response.data);
     }
   };
 
@@ -145,34 +145,74 @@ export default function EditProfileScreen() {
     }
 
     if (valid) {
-      save();
+      uploadData();
     }
   };
 
-  const save = async () => {
-    setLoading(true);
 
+  const uploadData = async () => {
     try {
-      const response = await axios.post(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`, {
-        profile_image: profile,
-        name: name,
-        about: about,
-        gender: gender,
-        dob: dob,
-        phone: phonenumber,
-        email: email,
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('profile_image', {
+        uri: profile,
+        type: 'image/jpeg',
+        name: 'your_file_name.jpg',
+      });
+      formData.append('name', name);
+      formData.append('about', about);
+      formData.append('gender', gender);
+      formData.append('dob', dob);
+      formData.append('phone', phonenumber);
+      formData.append('email', email);
+
+      const response = await fetch(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      console.log('save Successfully:', response.data);
-
-      setLoading(false);
+      if (response.ok) {
+        console.log('Success:', 'profile save successfully');
+        setLoading(false);
       openModal();
-    }
-    catch (error) {
+      } else {
+        setLoading(false);
+        Alert.alert('Error:', 'Failed to upload profile data');
+      }
+    } catch (error) {
       setLoading(false);
-      console.error('Error saving profile:', error.response.data);
+      console.error('Error saving profile:', error);
     }
   };
+
+
+  // const save = async () => {
+  //   setLoading(true);
+    
+  //   try {
+  //     const response = await axios.post(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`, {
+  //       profile_image: profile,
+  //       name: name,
+  //       about: about,
+  //       gender: gender,
+  //       dob: dob,
+  //       phone: phonenumber,
+  //       email: email,
+  //     });
+
+  //     console.log('save Successfully:', response.data);
+
+  //     setLoading(false);
+  //     openModal();
+  //   }
+  //   catch (error) {
+  //     setLoading(false);
+  //     // console.error('Error saving profile:', error.response.data);
+  //   }
+  // };
 
 
   const handleError = (errorMessage, input) => {
@@ -195,6 +235,7 @@ export default function EditProfileScreen() {
     }).then(image => {
       console.log(image);
       setProfile(image.path)
+      // console.log(profile)
       toggleModal(); // Close the modal
     })
       .catch((err) => {
@@ -208,7 +249,7 @@ export default function EditProfileScreen() {
       height: 400,
       cropping: true
     }).then(image => {
-      console.log(image);
+      // console.log('checkimahe path:',image.path);
       setProfile(image.path)
       toggleModal(); // Close the modal
 
@@ -217,6 +258,26 @@ export default function EditProfileScreen() {
         console.log('Error fetching images from gallery', err);
       });
   };
+
+  // const choosePhotosFromGallery = () => {
+  //   ImagePicker.openPicker({
+  //     width: 300,
+  //     height: 400,
+  //     cropping: true
+  //   })
+  //   .then(image => {
+  //     console.log('Selected image path:', image.path);
+  //     setProfile({
+  //       uri: image.path,
+  //       type: image.mime, // Add the MIME type of the image
+  //       name: image.path.substring(image.path.lastIndexOf('/') + 1) // Extract the filename from the path
+  //     });
+  //     toggleModal();
+  //   })
+  //   .catch(error => {
+  //     console.log('Error fetching images from gallery:', error);
+  //   });
+  // };
 
   const handleCategoryChange = (value) => {
     setGender(value)

@@ -17,9 +17,12 @@ import { imageGallery } from '../components/Data';
 
 const FundraiserDetails = ({ route }) => {
     const navigation = useNavigation();
-    const { cardId, cardList } = route.params;
+    // const { cardId, cardList } = route.params;
+    const { itemId, cardList } = route.params;
    
-    const selectedCard = cardList.find((card) => card.id === cardId);
+    // const selectedCard = cardList.find((card) => card.id === cardId);
+    const selectedCard = cardList.find((card) => card.id === itemId);
+
     // console.warn(selectedCard)
     const [showFullText, setShowFullText] = useState(false);
 
@@ -47,7 +50,8 @@ const FundraiserDetails = ({ route }) => {
                         showSavedIcon={true}
                         showDonationInfo={true}
                         imageView={false}
-                        data={imageGallery}
+                        // data={imageGallery}
+                        // data={{selectedCard.image}}
                         savedView={true}
                     />
 

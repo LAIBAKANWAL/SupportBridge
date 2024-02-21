@@ -65,8 +65,8 @@ const BottomNavigation = () => {
       />
       {/* ReceiverForm */}
       <Tab.Screen
-        name="ReceiverForm"
-        component={ReceiverForm}
+        name="DonarForm"
+        component={DonarForm}
         options={{
           tabBarStyle:{display:"none"},
           tabBarIcon: ({ focused }) => {

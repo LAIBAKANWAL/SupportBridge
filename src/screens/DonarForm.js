@@ -127,7 +127,8 @@ export default function DonarForm() {
                 if (images.length > 0) {
                     const remainingSlots = maxImageLimit - selectedImages.length; // Adjust the limit as needed
                     const imagesToSelect = images.slice(0, remainingSlots);
-                    setSelectedImages([...selectedImages, ...imagesToSelect]); // Set the selected images
+       
+              setSelectedImages([...selectedImages, ...imagesToSelect]); // Set the selected images
                     toggleModal(); // Close the modal
                 }
             })
@@ -135,6 +136,8 @@ export default function DonarForm() {
                 console.log('Error fetching images from gallery', err);
             });
     };
+
+    console.log(selectedImages.path)
 
     const removePhoto = (index) => {
         const newImages = [...selectedImages];

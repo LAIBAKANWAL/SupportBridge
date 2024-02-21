@@ -19,7 +19,7 @@ export default function Login() {
     
     const [inputs, setInputs] = useState({
         cnic: "00000-0000000-0",
-        password: "123456789q",
+        password: "1234567q",
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
