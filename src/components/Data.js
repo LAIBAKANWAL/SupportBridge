@@ -78,10 +78,9 @@ const IMAGES = {
     image1: require('../../assets/images/awareness.png'),
     image2: require('../../assets/images/medical.png'),
     image3: require('../../assets/images/world.png'),
-    image4: require('../../assets/images/icon1.png'),
-    image5: require('../../assets/images/education.png'),
+    image4: require('../../assets/images/education.png'),
   };
-  
+
   
   const categories = [
     {
@@ -105,12 +104,6 @@ const IMAGES = {
     {
       id: "4",
       image: categoryImages.image4,
-      name: "Humaninty",
-      backgroundColor: "#edeaf9"
-    },
-    {
-      id: "5",
-      image: categoryImages.image5,
       name: "Education",
       backgroundColor: "#EBF2D2"
     },

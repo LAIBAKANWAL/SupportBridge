@@ -33,7 +33,7 @@ import Items from './src/screens/Items';
 import ReceiverRequest from './src/screens/ReceiverRequest';
 import Categories from './src/screens/Categories';
 import RequestInfo from './src/screens/RequestInfo';
-
+import CategoryList from './src/screens/CategoryList';
 export{
     Signup,
     Login,
@@ -59,5 +59,6 @@ export{
     Items,
     ReceiverRequest,
     Categories,
-    RequestInfo
+    RequestInfo,
+    CategoryList
 }

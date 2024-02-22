@@ -48,13 +48,13 @@ export default function DonarForm() {
 
     useEffect(() => {
         getLoginDataFromStorage();
-    
+
         if (description && description.length > 200) {
             handleError('Description is too long', 'description');
         }
-    
+
     }, [description]);
-    
+
 
     const getLoginDataFromStorage = async () => {
         try {
@@ -127,8 +127,16 @@ export default function DonarForm() {
                 if (images.length > 0) {
                     const remainingSlots = maxImageLimit - selectedImages.length; // Adjust the limit as needed
                     const imagesToSelect = images.slice(0, remainingSlots);
-       
-              setSelectedImages([...selectedImages, ...imagesToSelect]); // Set the selected images
+
+                    // Get the paths of the selected images
+                    const selectedImagePaths = imagesToSelect.map(image => image.path);
+                    // Set the selected image paths to state
+                    setSelectedImages(prevPaths => [...prevPaths, ...selectedImagePaths]);
+
+
+                    //   setSelectedImages([...selectedImages, ...imagesToSelect]); // Set the selected images
+
+                    // console.log('Selected Image Paths:', selectedImagePaths);
                     toggleModal(); // Close the modal
                 }
             })
@@ -137,8 +145,7 @@ export default function DonarForm() {
             });
     };
 
-    console.log(selectedImages.path)
-
+    // console.log(selectedImages)
     const removePhoto = (index) => {
         const newImages = [...selectedImages];
         newImages.splice(index, 1);
@@ -150,7 +157,9 @@ export default function DonarForm() {
         <TouchableOpacity
             onPress={toggleImageSelectModal}
         >
-            <Image source={{ uri: item.path }} style={styles.carouselImages} />
+            {/* <Image source={{ uri: item.path }} style={styles.carouselImages} /> */}
+            <Image source={{ uri: item }} style={styles.carouselImages} />
+
         </TouchableOpacity>
     );
 
@@ -204,30 +213,71 @@ export default function DonarForm() {
             create();
         }
     };
-
-
+    
     const create = async () => {
-
         setLoading(true);
+
         try {
-            const response = await axios.post(`https://app-api.demo-customwebsites.com/api/create-fund-request`, {
-                title: title,
-                category: allcategories,
-                description: description,
-                terms_accept: isChecked ? "yes" : "no",
-                user_id: id,
+            const formData = new FormData();
+
+            // Append text data
+            formData.append('title', title);
+            formData.append('category', allcategories);
+            formData.append('description', description);
+            formData.append('terms_accept', isChecked ? 'yes' : 'no');
+            formData.append('user_id', id);
+s
+            // Append images
+            selectedImages.forEach((image, index) => {
+                // formData.append(`images[${index}]`, {
+                    formData.append(`images[]`, {
+
+                    uri: image,
+                    type: 'image/jpeg', // Adjust the type based on your image type
+                    name: `image_${index}.jpg`,
+                });
             });
 
-            console.log('Create Successfully:', response.data);
+            const response = await axios.post('https://app-api.demo-customwebsites.com/api/create-fund-request', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            // console.log('Create Successfully:', response.data);
 
             setLoading(false);
             openModal();
-        }
-        catch (error) {
+        } catch (error) {
             setLoading(false);
-            console.error('Error creatig fund failed:', error.response.data);
+            // console.error('Error creating fund failed:', error.response.data);
         }
     };
+
+
+    // const create = async () => {
+
+    //     setLoading(true);
+    //     try {
+    //         const response = await axios.post(`https://app-api.demo-customwebsites.com/api/create-fund-request`, {
+    //             title: title,
+    //             category: allcategories,
+    //             description: description,
+    //             terms_accept: isChecked ? "yes" : "no",
+    //             user_id: id,
+
+    //         });
+
+    //         console.log('Create Successfully:', response.data);
+
+    //         setLoading(false);
+    //         openModal();
+    //     }
+    //     catch (error) {
+    //         setLoading(false);
+    //         console.error('Error creatig fund failed:', error.response.data);
+    //     }
+    // };
 
     const handleError = (errorMessage, input) => {
         setErrors(prevState => ({ ...prevState, [input]: errorMessage }));

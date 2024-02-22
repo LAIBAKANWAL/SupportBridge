@@ -14,7 +14,8 @@ import Share from 'react-native-share';
 const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filterButtonIcon, showShareButton, fontSize,showSettingButton }) => {
   const [modalVisible, setModalVisible] = useState(false); // State for controlling the modal visibility
   const [isBlurVisible, setBlurVisible] = useState(false); // State for managing the blur effect
-  const [selectedCategories, setSelectedCategories] = useState([]); // State for selected categories
+  // const [selectedCategory, setSelectedCategory] = useState('');
+
   const navigation = useNavigation();
 
   const handleSharePress = () => {
@@ -40,53 +41,8 @@ const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filte
     setBlurVisible(true); // Enable the blur effect when opening the modal
   };
 
-  const handleCategorySelect = (category) => {
-    // Function to select/deselect categories
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((item) => item !== category));
-    } else {
-      setSelectedCategories([...selectedCategories, category]);
-    }
-  };
-
-  const handleApplyFilter = () => {
-    // Apply the selected filters here
-    setModalVisible(false); // Close the FilterModal
-  };
 
   return (
-    // <View>
-    //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, marginTop: 15 }}>
-    //     {showBackButton && (
-    //       <TouchableOpacity onPress={handleBack}>
-    //         {backButtonIcon ? (
-    //           backButtonIcon
-    //         ) : (
-    //           <MaterialIcons name="arrow-back-ios-new" size={24} color={COLORS.grey} />
-    //         )}
-    //       </TouchableOpacity>
-    //     )}
-    //     <Text style={{ fontSize: 24, fontFamily: Fonts.bold, color: COLORS.black }}>{title}</Text>
-    //     {showFilterButton && (
-    //       <TouchableOpacity onPress={handleFilterPress}>
-    //         {filterButtonIcon ? (
-    //           filterButtonIcon
-    //         ) : (
-    //           <Ionicons name="filter" size={24} color={COLORS.grey} />
-    //         )}
-    //       </TouchableOpacity>
-    //     )}
-    //     <FilterModal // Render the FilterModal component
-    //       modalVisible={modalVisible}
-    //       setModalVisible={setModalVisible}
-    //       selectedCategories={selectedCategories}
-    //       onCategorySelect={handleCategorySelect}
-    //       onApply={handleApplyFilter}
-    //       categories={list}
-    //     />
-    //   </View>
-    // </View>
-
     <View style={styles.container}>
       <View style={styles.left}>
         {showBackButton && (
@@ -125,15 +81,14 @@ const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filte
           </TouchableOpacity>
         )}
       </View>
-      <FilterModal // Render the FilterModal component
+      
+      {/* <FilterModal // Render the FilterModal component
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        selectedCategories={selectedCategories}
-        onCategorySelect={handleCategorySelect}
-        onApply={handleApplyFilter}
-        categories={list}
+        onApply
         isBlurVisible={isBlurVisible}
-      />
+        selectedCategory
+      /> */}
     </View>
   );
 };

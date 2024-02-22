@@ -9,45 +9,53 @@ import SIZES from '../../../constants/Sizes';
 const FilterModal = ({
   modalVisible,
   setModalVisible,
-  selectedCategories, // Pass the selectedCategories prop
-  onCategorySelect, // Pass the onCategorySelect function
   onApply, // Pass the onApply function
-  categories,
   isBlurVisible,
 }) => {
-  const renderCheckbox = (item) => {
-    const isSelected = selectedCategories.includes(item.category);
-    return (
-      <TouchableOpacity
-        style={[styles.checkboxContainer, isSelected && styles.selected]}
-        onPress={() => onCategorySelect(item.category)} // Call the onCategorySelect function
-      >
-        {isSelected ? (
-          <View>
-            <MaterialCommunityIcons name="checkbox-marked" size={24} color={COLORS.primary} />
-            </View>
+
+  const categ = [
+    {
+      id: "0",
+      name: "Social",
+    },
+    {
+      id: "1",
+      name: "Medical",
+        },
+    {
+      id: "3",
+      name: "Disaster",
+    },
+    {
+      id: "4",
+      name: "Education",
+    },
+    {
+      id: "5",
+      name: "Humaninty",
+    },
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  
+  console.log(selectedCategory)
+    const renderRadioButton = (item) => {
+      const isSelected = selectedCategory === item.name;
+
+      return (
+        <TouchableOpacity
+          style={[styles.radioButtonContainer, isSelected && styles.selected]}
+          onPress={() => setSelectedCategory(item.name)}
+        >
+          {isSelected ? (
+            <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} />
           ) : (
-            <MaterialCommunityIcons name="checkbox-blank-outline" size={24} color={COLORS.grey} />
+            <MaterialCommunityIcons name="radiobox-blank" size={24} color={COLORS.grey} />
           )}
-        
-          <Text style={styles.checkboxText}>{item.category}</Text>
+          <Text style={styles.radioButtonText}>{item.name}</Text>
         </TouchableOpacity>
       );
     };
-  
-
-  const getUniqueCategories = (data) => {
-    const uniqueCategories = new Set();
-    return data.filter((item) => {
-      if (!uniqueCategories.has(item.category)) {
-        uniqueCategories.add(item.category);
-        return true;
-      }
-      return false;
-    });
-  };
-
-  const uniqueCategories = getUniqueCategories(categories);
 
   return (
     <View style={styles.centeredView}>
@@ -63,16 +71,16 @@ const FilterModal = ({
         <View style={[styles.modalContainer, isBlurVisible && styles.blurBackground]}>
           <View style={styles.modalView}>
             <View style={styles.header}>
-              <Text style={styles.textStyle}>Select Categories</Text>
+              <Text style={styles.textStyle}>Select Category</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <MaterialCommunityIcons name="close" size={24} color={COLORS.black} />
               </TouchableOpacity>
             </View>
 
             <FlatList
-              data={uniqueCategories}
+              data={categ}
               keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => renderCheckbox(item)}
+              renderItem={({ item }) => renderRadioButton(item)}
             />
 
             <Button
@@ -151,6 +159,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  radioButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  radioButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color:COLORS.grey,
   },
 });
 

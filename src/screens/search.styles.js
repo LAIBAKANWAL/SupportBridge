@@ -73,5 +73,6 @@ closeBtn:{
 
 });
 
+
 export default styles;
 

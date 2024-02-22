@@ -8,39 +8,45 @@ import { useNavigation } from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import CardItem from '../CardItem';
 import styles from '../carditem.style';
-import {list} from '../components/Data'
+// import {list} from '../components/Data'
 
-const Card = ({ horizontal, titleText, seeAllText, hideContainer,showHeartIcon ,list,searchView,disablePress,showOrganiserInfo,showSavedIcon,showDonationInfo, savedView,imageView, profileView}) => {
+const Card = ({ horizontal, titleText, seeAllText, hideContainer, showHeartIcon, list, searchView, disablePress, showOrganiserInfo, showSavedIcon, showDonationInfo, savedView, imageView, profileView }) => {
     const navigation = useNavigation();
-    
+
     return (
 
         <View style={styles.cardContainer}>
-             {hideContainer ? null : (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={styles.cardTitle}>{titleText}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Signup")} style={styles.seeAllButton}>
-                    <Text style={styles.seeAllText}>{seeAllText}</Text>
-                    <Ionicons name="arrow-forward-outline" size={24} color={COLORS.primary} />
-                </TouchableOpacity>
-            </View>
- )}
+            {hideContainer ? null : (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={styles.cardTitle}>{titleText}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("AllCategories", { categoryName: titleText})} style={styles.seeAllButton}>
+                
+                            <Text style={styles.seeAllText}>{seeAllText}</Text>
+                            <Ionicons name="arrow-forward-outline" size={24} color={COLORS.primary} />
+                        </TouchableOpacity>
+                </View>
+            )}
 
-<FlatList
+            <FlatList
                 data={list}
                 renderItem={({ item }) => (
+
                     <CardItem
                         item={item}
                         showHeartIcon={showHeartIcon}
                         // navigation={navigation}
                         disablePress={disablePress}
-                        searchView ={searchView}
+                        searchView={searchView}
                         showOrganiserInfo={showOrganiserInfo}
                         showSavedIcon={showSavedIcon}
                         showDonationInfo={showDonationInfo}
                         savedView={savedView}
                         imageView={imageView}
                         profileView={profileView}
+                        titleText={titleText}
+                        seeAllText={seeAllText}
+                        hideContainer={hideContainer}
+                        hide={true}
                     />
                 )}
                 keyExtractor={(item) => item.id}

@@ -25,8 +25,6 @@ const FundraiserDetails = ({ route }) => {
        getdata(itemId)
     },[itemId]);
     
-   
-    console.log('id:',itemId)
      
     const getdata = async (id) => {
         try {
@@ -50,7 +48,7 @@ const FundraiserDetails = ({ route }) => {
     const [showFullText, setShowFullText] = useState(false);
 
     const storyText = 'Our campaign will focus on bridging the educational gap for children facing financial constraints. Many bright minds in our community lack access to basic educational resources, hindering their ability to reach their full potential. "Empowering Dreams" aims to provide school supplies, scholarships, and educational support to these deserving children.';
-console.log(fundDetails.title)
+
     const trimmedText = showFullText ? storyText : storyText.slice(0, 150);
     return (
         // marginHorizontal: SIZES.small - 3
@@ -74,7 +72,8 @@ console.log(fundDetails.title)
                         showDonationInfo={true}
                         imageView={false}
                         // data={imageGallery}
-                        data={fundDetails.image1}
+                        // data={fundDetails.image1}
+                        data={fundDetails}
                         savedView={true}
                     />
 
