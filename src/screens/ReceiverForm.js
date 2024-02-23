@@ -307,10 +307,10 @@ export default function ReceiverForm() {
                     showBackButton
                 />
             </View>
-            <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: SIZES.xLarge - 2 }}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: SIZES.xLarge - 3 }}>
 
                 <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
-                <View style={{ flex: 1, marginHorizontal: SIZES.xSmall - 5 }} >
+                <View>
                     <View>
                         <Text style={{
                             fontSize: 22,

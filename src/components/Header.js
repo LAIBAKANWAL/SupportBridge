@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet ,Alert} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -14,9 +14,41 @@ import Share from 'react-native-share';
 const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filterButtonIcon, showShareButton, fontSize,showSettingButton }) => {
   const [modalVisible, setModalVisible] = useState(false); // State for controlling the modal visibility
   const [isBlurVisible, setBlurVisible] = useState(false); // State for managing the blur effect
-  // const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const categ = [
+    {
+      id: "0",
+      name: "Social",
+    },
+    {
+      id: "1",
+      name: "Medical",
+        },
+    {
+      id: "3",
+      name: "Disaster",
+    },
+    {
+      id: "4",
+      name: "Education",
+    },
+    {
+      id: "5",
+      name: "Humaninty",
+    },
+  ];
 
   const navigation = useNavigation();
+
+  const onApply = (category) => {
+    // Handle the logic when the "Apply" button is pressed
+    // console.log('Selected Category:', category);
+    setSelectedCategory(category);
+
+    setModalVisible(false); // Close the modal after applying
+    navigation.navigate("AllCategories", { categoryName: category });
+  };
 
   const handleSharePress = () => {
 
@@ -89,6 +121,17 @@ const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filte
         isBlurVisible={isBlurVisible}
         selectedCategory
       /> */}
+
+<FilterModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        onApply={onApply}
+        isBlurVisible={isBlurVisible}
+        selectedCategory={selectedCategory}
+        categories={categ}
+        navigation={navigation}
+        setSelectedCategory={setSelectedCategory}
+      />
     </View>
   );
 };

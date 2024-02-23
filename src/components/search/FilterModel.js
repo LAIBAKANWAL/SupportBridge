@@ -11,40 +11,23 @@ const FilterModal = ({
   setModalVisible,
   onApply, // Pass the onApply function
   isBlurVisible,
+  selectedCategory, // Pass the selected category state
+  categories,
+  setSelectedCategory,
+  navigation
 }) => {
 
-  const categ = [
-    {
-      id: "0",
-      name: "Social",
-    },
-    {
-      id: "1",
-      name: "Medical",
-        },
-    {
-      id: "3",
-      name: "Disaster",
-    },
-    {
-      id: "4",
-      name: "Education",
-    },
-    {
-      id: "5",
-      name: "Humaninty",
-    },
-  ];
-
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  
   console.log(selectedCategory)
+
+  // const [selectedCategory, setSelectedCategory] = useState(null);
+  
     const renderRadioButton = (item) => {
       const isSelected = selectedCategory === item.name;
 
       return (
         <TouchableOpacity
           style={[styles.radioButtonContainer, isSelected && styles.selected]}
+          // onPress={() => onApply(item.name)}
           onPress={() => setSelectedCategory(item.name)}
         >
           {isSelected ? (
@@ -78,7 +61,7 @@ const FilterModal = ({
             </View>
 
             <FlatList
-              data={categ}
+              data={categories}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => renderRadioButton(item)}
             />
@@ -90,8 +73,26 @@ const FilterModal = ({
                 marginTop: 18,
                 marginBottom: 4,
               }}
+              // onPress={() => {
+              //   // if (selectedCategory) {
+              //   //   // Check if a category is selected
+              //   //   onApply(selectedCategory);
+              //   //   {navigation}
+              //   // } else {
+              //   //   // Handle the case when no category is selected
+              //   //   Alert.alert('Please select a category before applying.');
+              //   // }
+              //   onApply()
+              // }}
               onPress={() => {
-                onApply(); // Call the onApply function
+                if (selectedCategory) {
+                  // Check if a category is selected
+                  onApply(selectedCategory);
+                  {navigation}
+                } else {
+                  // Handle the case when no category is selected
+                  Alert.alert('Please select a category before applying.');
+                }
               }}
             />
           </View>

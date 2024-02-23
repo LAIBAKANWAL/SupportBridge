@@ -29,7 +29,7 @@ const AllCategories = ({ route }) => {
 
   const { categoryName } = route.params;
   const [categoryData, setCategoryData] = useState([]);
-  console.log(categoryName)
+  // console.log(categoryName)
 
 
   useEffect(() => {

@@ -19,13 +19,16 @@ import axios from 'axios';
 const FundraiserDetails = ({ route }) => {
     const navigation = useNavigation();
     const [fundDetails,setFundDetails] = useState({});
+    const [donarDetails,setDonarDetails] = useState({});
     // const { cardId, cardList } = route.params;
     const { itemId} = route.params;
+
     useEffect(() => {
        getdata(itemId)
-    },[itemId]);
-    
-     
+       getDonarData(fundDetails.user_id)
+    },[itemId,fundDetails.user_id]);
+
+
     const getdata = async (id) => {
         try {
           const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-fund/${id}`);
@@ -33,6 +36,7 @@ const FundraiserDetails = ({ route }) => {
           console.log('get fund details Successfully:', response.data);
           setFundDetails(response.data.data);
           console.log('show:',response.data.data)
+
         //   setLoading(false);
         }
         catch (error) {
@@ -40,16 +44,31 @@ const FundraiserDetails = ({ route }) => {
           console.error('Error get fund details:', error.response.data);
         }
       };
-    // const selectedCard = cardList.find((card) => card.id === cardId);
-    // const selectedCard = cardList.find((card) => card.id === itemId);
-    // console.log(fundDetails.title)
 
-    // console.warn(selectedCard)
+      const getDonarData = async (id) => {
+        try {
+          const response = await axios.get(`https://app-api.demo-customwebsites.com/api/user-profile/${id}`);
+      
+        //   console.log('get fund details Successfully:', response.data);
+        setDonarDetails(response.data.data);
+          console.log('donar:',response.data.data)
+
+        //   setLoading(false);
+        }
+        catch (error) {
+        //   setLoading(false);
+          console.error('Error get fund details:', error.response.data);
+        }
+      };
+   
     const [showFullText, setShowFullText] = useState(false);
 
     const storyText = 'Our campaign will focus on bridging the educational gap for children facing financial constraints. Many bright minds in our community lack access to basic educational resources, hindering their ability to reach their full potential. "Empowering Dreams" aims to provide school supplies, scholarships, and educational support to these deserving children.';
 
     const trimmedText = showFullText ? storyText : storyText.slice(0, 150);
+
+    const profileImage = "https://app-api.demo-customwebsites.com/" + donarDetails.profile_image;
+
     return (
         // marginHorizontal: SIZES.small - 3
         <SafeAreaView style={{ flex: 1, }}>
@@ -82,8 +101,10 @@ const FundraiserDetails = ({ route }) => {
                     justifyContent: 'center'
                 }}>
                     <Button
-                    onPress={() => navigation.navigate('Donation',  { fundDetails })}
-                        title="Donate Now"
+                    // onPress={() => navigation.navigate('Donation',  { fundDetails })}
+                    onPress={() => navigation.navigate('ReceiverForm',  { fundDetails })}
+
+                        title="Request Now"
                         filled={true}
                         width='95%'
                         style={{
@@ -101,11 +122,11 @@ const FundraiserDetails = ({ route }) => {
                         <View style={{ width: 50, height: 50, backgroundColor: COLORS.lightGray, borderRadius: 35, padding: 32, alignItems: "center", justifyContent: "center" }}>
                             <Image
                                 style={{ width: 40, height: 40, resizeMode: "contain" }}
-                                source={fundDetails.image}
-                            />
+                                source={{ uri: profileImage }}
+                                />
                         </View>
                         <View style={{ flex: 1, marginLeft: 10 }}>
-                            <Text style={styles.cardItemName(COLORS.black, 5, SIZES.medium)}>Healthy Home</Text>
+                            <Text style={styles.cardItemName(COLORS.black, 5, SIZES.medium)}>{donarDetails.name}</Text>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Text style={styles.cardItemName(COLORS.grey, 5)}>Verified </Text>
                                 <MaterialIcons name="verified" size={20} color={COLORS.primary} />
