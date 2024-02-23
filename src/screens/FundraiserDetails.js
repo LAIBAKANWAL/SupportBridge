@@ -21,7 +21,7 @@ const FundraiserDetails = ({ route }) => {
     const [fundDetails,setFundDetails] = useState({});
     const [donarDetails,setDonarDetails] = useState({});
     // const { cardId, cardList } = route.params;
-    const { itemId} = route.params;
+    const {itemId} = route.params;
 
     useEffect(() => {
        getdata(itemId)
@@ -102,8 +102,8 @@ const FundraiserDetails = ({ route }) => {
                 }}>
                     <Button
                     // onPress={() => navigation.navigate('Donation',  { fundDetails })}
-                    onPress={() => navigation.navigate('ReceiverForm',  { fundDetails })}
-
+                    onPress={() => navigation.navigate('ReceiverForm',  {fundId: itemId })}
+                    
                         title="Request Now"
                         filled={true}
                         width='95%'

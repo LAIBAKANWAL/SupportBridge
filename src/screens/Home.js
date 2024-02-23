@@ -99,7 +99,7 @@ const Home = () => {
       console.error('Error fetching data:', error.response.data);
     }
   };
-
+console.log(id)
 
   const filterData = (category) => {
     // Function to dynamically filter based on category

@@ -76,6 +76,7 @@ export default function DonarForm() {
         }
     };
 
+    console.log('me', id)
 
     const maxImageLimit = 5;
 
@@ -133,9 +134,6 @@ export default function DonarForm() {
                     // Set the selected image paths to state
                     setSelectedImages(prevPaths => [...prevPaths, ...selectedImagePaths]);
 
-
-                    //   setSelectedImages([...selectedImages, ...imagesToSelect]); // Set the selected images
-
                     // console.log('Selected Image Paths:', selectedImagePaths);
                     toggleModal(); // Close the modal
                 }
@@ -157,7 +155,6 @@ export default function DonarForm() {
         <TouchableOpacity
             onPress={toggleImageSelectModal}
         >
-            {/* <Image source={{ uri: item.path }} style={styles.carouselImages} /> */}
             <Image source={{ uri: item }} style={styles.carouselImages} />
 
         </TouchableOpacity>
@@ -213,48 +210,80 @@ export default function DonarForm() {
             create();
         }
     };
-    
+
     const create = async () => {
         setLoading(true);
 
         try {
             const formData = new FormData();
-
             // Append text data
             formData.append('title', title);
             formData.append('category', allcategories);
             formData.append('description', description);
             formData.append('terms_accept', isChecked ? 'yes' : 'no');
             formData.append('user_id', id);
-s
-            // Append images
-            selectedImages.forEach((image, index) => {
-                // formData.append(`images[${index}]`, {
-                    formData.append(`images[]`, {
 
-                    uri: image,
+            // Append images
+            // selectedImages.forEach((image, index) => {
+            //     formData.append(`images[${index}]`, {
+            //         // formData.append(`images[]`, {
+
+            //         uri: image,
+            //         type: 'image/jpeg', // Adjust the type based on your image type
+            //         name: `image_${index}.jpg`,
+            //     });
+            // });
+
+            selectedImages.forEach((path, index) => {
+                formData.append(`images${index}`, {
+                    uri: path,
                     type: 'image/jpeg', // Adjust the type based on your image type
-                    name: `image_${index}.jpg`,
+                    name: `image_${index + 1}.jpg`,
                 });
             });
+            console.log('images', selectedImages)
 
-            const response = await axios.post('https://app-api.demo-customwebsites.com/api/create-fund-request', formData, {
+            const response = await fetch('https://app-api.demo-customwebsites.com/api/create-fund-request', formData, {
+                method: 'POST',
+                body: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+
             });
 
-            // console.log('Create Successfully:', response.data);
+            //     console.log('Create Successfully:', response.message);
+            //     //  console.log('Create Successfully:', response.data);
 
-            setLoading(false);
-            openModal();
+            //     setLoading(false);
+            //     openModal();
+            // } catch (error) {
+            //     setLoading(false);
+            //     // console.log('Error creating fund failed:', error.message);
+            //     console.error('Error creatig fund failed:', error.response.data);
+
+            // }
+            if (response.ok) {
+
+                console.log('Submit Successfully:', response.data);
+
+                setLoading(false);
+                openModal();
+
+            } else {
+                setLoading(false);
+                Alert.alert('Error:', 'Failed to create fund');
+            }
         } catch (error) {
             setLoading(false);
-            // console.error('Error creating fund failed:', error.response.data);
+            console.error('Error creating fund failed:', error);
+
+            // console.error('Error creatig fund failed:', error.response.data);
+
         }
     };
 
-
+    console.log('img', selectedImages);
     // const create = async () => {
 
     //     setLoading(true);
@@ -300,8 +329,6 @@ s
         setSubmitModalVisible(false);
         resetState();
         navigation.navigate('Home')
-
-        console.log("Navigating to Home");
     };
 
     const resetState = () => {

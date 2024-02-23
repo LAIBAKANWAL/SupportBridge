@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, SafeAreaView, ScrollView, Pressable, Platform, TextInput ,Keyboard} from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, SafeAreaView, ScrollView, Pressable, Platform, TextInput, Keyboard } from 'react-native';
 import Modal from 'react-native-modal';
 import COLORS from '../../constants/Colors';
 import Header from '../components/Header';
@@ -14,10 +14,11 @@ import Checkbox from '../components/checkbox/Checkbox';
 import { useNavigation } from '@react-navigation/native';
 import styles from './create.style';
 import Loader from '../components/Loader';
+import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function ReceiverForm() {
+export default function ReceiverForm({ route }) {
 
     const navigation = useNavigation();
     const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
@@ -35,11 +36,16 @@ export default function ReceiverForm() {
     const [term, setTerm] = useState();
     const [disability, setDisability] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    const [isModalVisible, setModalVisible] = useState(false);
+    const [isModalVisible1, setModalVisible1] = useState(false);
+    const [isModalVisible2, setModalVisible2] = useState(false);
+
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [id, setid] = useState();
+    const { fundId } = route.params;
+
+    // console.log('fundid:', fundId)
 
     const eduCategories = [
         { label: 'Inter', value: 'Inter' },
@@ -124,15 +130,15 @@ export default function ReceiverForm() {
             setErrors(prevState => ({ ...prevState, status: null }));
         }
 
-        if (!salarySlip || salarySlip.length === 0) {
-            handleError("Please select slip", 'salarySlip');
-            valid = false;
-        }
+        // if (!salarySlip || salarySlip.length === 0) {
+        //     handleError("Please select slip", 'salarySlip');
+        //     valid = false;
+        // }
 
-        if (!bill || bill.length === 0) {
-            handleError("Upload any latest bill", 'bill');
-            valid = false;
-        }
+        // if (!bill || bill.length === 0) {
+        //     handleError("Upload any latest bill", 'bill');
+        //     valid = false;
+        // }
 
         if (!familyMembers) {
             handleError('Please mention numbers', 'familyMembers');
@@ -177,33 +183,88 @@ export default function ReceiverForm() {
     };
 
     const submit = async () => {
-
-        setLoading(true);
         try {
-            const response = await axios.post(`https://app-api.demo-customwebsites.com/api/user-request/${id}`, {
-                full_name: fullname,
-                address: address,
-                postal_code: postalCode,
-                status: status,
-                family_member: familyMembers,
-                education: education,
-                profession: currentProfession,
-                description: description,
-                salary_slip: salarySlip,
-                bill: bill,
-                disability: disability ? "yes" : "no",
-                terms_accept: isChecked ? "yes" : "no",
-                user_id: id,
+            setLoading(true);
+            const formData = new FormData();
+            console.log('full_name', fullname);
+            console.log('address', address);
+            console.log('postal_code', postalCode);
+            console.log('status', status);
+            console.log('family_member', familyMembers);
+            console.log('education', education);
+            console.log('profession', currentProfession);
+            console.log('description', description);
+            console.log('disability', disability ? "yes" : "no");
+            console.log('terms_accept', isChecked ? "yes" : "no",);
+            console.log('user_id', id);
+            // console.log('img', salarySlip.path);
+            // console.log('img2', bill.path);
+
+
+            // if (salarySlip) {
+            //     formData.append('salary_slip', {
+            //         uri: salarySlip.path,
+            //         type: salarySlip.type,
+            //         name: salarySlip.name,
+            //     });
+            // }
+            // if (bill) {
+            //     formData.append('bill', {
+            //         uri: bill.path,
+            //         type: bill.type,
+            //         name: bill.name,
+            //     });
+            // }
+            formData.append('salary_slip', {
+                uri: salarySlip.imagePath,
+                type: salarySlip.imageType,
+                name: salarySlip.imageName,
+            });
+            formData.append('bill', {
+                uri: bill.imagePath,
+                type: bill.imageType,
+                name: bill.imageName,
+            });
+          
+            formData.append('full_name', fullname);
+            formData.append('address', address);
+            formData.append('postal_code', postalCode);
+            formData.append('status', status);
+            formData.append('family_member', familyMembers);
+            formData.append('education', education);
+            formData.append('profession', currentProfession);
+            formData.append('description', description);
+            formData.append('disability', disability ? "yes" : "no");
+            formData.append('terms_accept', isChecked ? "yes" : "no",);
+            formData.append('user_id', id);
+
+
+
+            const response = await fetch(`https://app-api.demo-customwebsites.com/api/user-request/${fundId}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+
             });
 
-            console.log('Submit Successfully:', response.data);
+            if (response.ok) {
+                //  console.log('Submit Successfully:', response.data);
 
+                setLoading(false);
+                openModal();
+
+            } else {
+                setLoading(false);
+                Alert.alert('Error:', 'Failed to send request');
+            }
+        } catch (error) {
             setLoading(false);
-            openModal();
-        }
-        catch (error) {
-            setLoading(false);
-            console.error('Error submitting details failed:', error.response.data);
+            //   console.error('Error submitting details failed:', error.response.data);
+            // console.error('Error submitting details failed:', error.response.message);
+            console.error('Error submitting details failed:', error);
+
         }
     };
 
@@ -226,65 +287,56 @@ export default function ReceiverForm() {
         }
     };
 
-    const selectDoc = async (setState) => {
-        try {
-            const docs = await DocumentPicker.pick({
-                type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
-                // allowMultiSelection: true
+
+    const toggleModal1 = () => {
+        setModalVisible1(!isModalVisible1);
+    };
+
+    const toggleModal2 = () => {
+        setModalVisible2(!isModalVisible2);
+    };
+    const choosePhotosFromGallery1 = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            console.log('image:', image)
+            const imagePath = image.path; // Path of the selected image
+            const imageName = imagePath.split('/').pop(); // Extracting the name from the path
+            const imageType = image.mime; // MIME type of the image
+
+            // Now you can use imagePath and imageName as needed
+            // setSalarySlip({ path: imagePath, imageName, mime: imageType });
+            setSalarySlip({ imagePath, imageName, imageType });
+
+            toggleModal1(); // Close the modal
+
+        })
+            .catch((err) => {
+                console.log('Error fetching images from gallery', err);
             });
-            // Extract paths from the selected documents
-        const paths = docs.map((doc) => doc.uri);
+    };
 
-            // Update the state with the selected documents
-            setState(paths);
-        } catch (err) {
-            if (DocumentPicker.isCancel(err)){
-             
-                console.log('Please select at least one document !');
-                
-            }
-            else
-                console.log(err)
-        }
-    }
+    const choosePhotosFromGallery2 = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            const imagePath = image.path; // Path of the selected image
+            const imageName = imagePath.split('/').pop(); // Extracting the name from the path
+            const imageType = image.mime; // MIME type of the image
 
-    //   const toggleModal = () => {
-    //     setModalVisible(!isModalVisible);
-    //   };
+            // Now you can use imagePath and imageName as needed
+            setBill({ imagePath, imageName, imageType });
+            toggleModal2(); // Close the modal
 
-
-    //   const takePhotoFromCamera = () => {
-    //     ImagePicker.openCamera({
-    //       width: 300,
-    //       height: 400,
-    //       cropping: true,
-    //     }).then(image => {
-    //       console.log(image);
-    //       setProfile(image.path)
-    //       toggleModal(); // Close the modal
-    //     })
-    //       .catch((err) => {
-    //         console.log('Error fetching image from Camera roll', err);
-    //       });
-    //   };
-
-    //   const choosePhotosFromGallery = () => {
-    //     ImagePicker.openPicker({
-    //       width: 300,
-    //       height: 400,
-    //       cropping: true
-    //     }).then(image => {
-    //       console.log(image);
-    //       setProfile(image.path)
-    //       toggleModal(); // Close the modal
-
-    //     })
-    //       .catch((err) => {
-    //         console.log('Error fetching images from gallery', err);
-    //       });
-    //   };
-
-   
+        })
+            .catch((err) => {
+                console.log('Error fetching images from gallery', err);
+            });
+    };
 
     const openModal = () => {
         setSubmitModalVisible(true);
@@ -426,11 +478,9 @@ export default function ReceiverForm() {
                     <Label text="Upload Salary Slip" icon iconPosition={130} />
 
                     <View style={styles.inputContainer}>
-                        <TouchableOpacity style={styles.inputBox} onPress={() => selectDoc(setSalarySlip)}>
-                            <Text style={{ color: COLORS.black, lineHeight: 20, marginRight: 17 }}>
-                                {salarySlip && salarySlip.length > 0
-                                    ? salarySlip.map((doc) => doc.name).join(', ')
-                                    : 'Select image'}
+                        <TouchableOpacity style={styles.inputBox} onPress={toggleModal1}>
+                            <Text style={{ color: COLORS.black, lineHeight: 20, marginRight: 35, }}>
+                                {salarySlip && salarySlip.imageName ? salarySlip.imageName : 'Select image'}
                             </Text>
 
                             <View style={{
@@ -440,18 +490,26 @@ export default function ReceiverForm() {
                                 {<MaterialCommunityIcons name="cloud-upload-outline" size={24} color={COLORS.grey} />}
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ color: COLORS.red, fontSize: 13,marginTop:7 }}>{errors.salarySlip}</Text>
+                        <Text style={{ color: COLORS.red, fontSize: 13, marginTop: 7 }}>{errors.bill}</Text>
 
+                        <Modal isVisible={isModalVisible1} style={styles.modal} onBackdropPress={toggleModal1}>
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity style={styles.modalButton} onPress={choosePhotosFromGallery1}>
+                                    <Text style={styles.textStyle}>Choose photo from gallery</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalButton} onPress={toggleModal1}>
+                                    <Text style={styles.textStyle}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
                     </View>
 
                     <Label text="Upload Bill" icon iconPosition={75} />
-                    <View style={styles.inputContainer}>
 
-                        <TouchableOpacity style={styles.inputBox} onPress={() => selectDoc(setBill)}>
-                            <Text style={{ color: COLORS.black, lineHeight: 20, marginRight: 17 }}>
-                                {bill && bill.length > 0
-                                    ? bill.map((doc) => doc.name).join(', ')
-                                    : 'Select image'}
+                    <View style={styles.inputContainer}>
+                        <TouchableOpacity style={styles.inputBox} onPress={toggleModal2}>
+                            <Text style={{ color: COLORS.black, lineHeight: 20, marginRight: 35, }}>
+                                {bill && bill.imageName ? bill.imageName : 'Select image'}
                             </Text>
 
                             <View style={{
@@ -461,9 +519,20 @@ export default function ReceiverForm() {
                                 {<MaterialCommunityIcons name="cloud-upload-outline" size={24} color={COLORS.grey} />}
                             </View>
                         </TouchableOpacity>
+                        <Text style={{ color: COLORS.red, fontSize: 13, marginTop: 7 }}>{errors.bill}</Text>
 
-                        <Text style={{ color: COLORS.red, fontSize: 13,marginTop:7 }}>{errors.bill}</Text>
+                        <Modal isVisible={isModalVisible2} style={styles.modal} onBackdropPress={toggleModal2}>
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity style={styles.modalButton} onPress={choosePhotosFromGallery2}>
+                                    <Text style={styles.textStyle}>Choose photo from gallery</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalButton} onPress={toggleModal2}>
+                                    <Text style={styles.textStyle}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
                     </View>
+
 
                     <Checkbox
                         label="Any disability"
