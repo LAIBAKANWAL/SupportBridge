@@ -91,7 +91,7 @@ export default function ReceiverForm({ route }) {
         }
     };
 
-console.log('fundid:',fundId)
+    console.log('fundid:', fundId)
 
     const validate = () => {
         Keyboard.dismiss();
@@ -186,35 +186,6 @@ console.log('fundid:',fundId)
         try {
             setLoading(true);
             const formData = new FormData();
-            console.log('full_name', fullname);
-            console.log('address', address);
-            console.log('postal_code', postalCode);
-            console.log('status', status);
-            console.log('family_member', familyMembers);
-            console.log('education', education);
-            console.log('profession', currentProfession);
-            console.log('description', description);
-            console.log('disability', disability ? "yes" : "no");
-            console.log('terms_accept', isChecked ? "yes" : "no",);
-            console.log('user_id', id);
-            // console.log('img', salarySlip.path);
-            // console.log('img2', bill.path);
-
-
-            // if (salarySlip) {
-            //     formData.append('salary_slip', {
-            //         uri: salarySlip.path,
-            //         type: salarySlip.type,
-            //         name: salarySlip.name,
-            //     });
-            // }
-            // if (bill) {
-            //     formData.append('bill', {
-            //         uri: bill.path,
-            //         type: bill.type,
-            //         name: bill.name,
-            //     });
-            // }
             formData.append('salary_slip', {
                 uri: salarySlip.imagePath,
                 type: salarySlip.imageType,
@@ -225,7 +196,7 @@ console.log('fundid:',fundId)
                 type: bill.imageType,
                 name: bill.imageName,
             });
-          
+
             formData.append('full_name', fullname);
             formData.append('address', address);
             formData.append('postal_code', postalCode);
@@ -237,8 +208,6 @@ console.log('fundid:',fundId)
             formData.append('disability', disability ? "yes" : "no");
             formData.append('terms_accept', isChecked ? "yes" : "no",);
             formData.append('user_id', id);
-
-
 
             const response = await fetch(`https://app-api.demo-customwebsites.com/api/user-request/${fundId}`, {
                 method: 'POST',
@@ -261,8 +230,6 @@ console.log('fundid:',fundId)
             }
         } catch (error) {
             setLoading(false);
-            //   console.error('Error submitting details failed:', error.response.data);
-            // console.error('Error submitting details failed:', error.response.message);
             console.error('Error submitting details failed:', error);
 
         }

@@ -82,6 +82,8 @@ export default function EditProfileScreen() {
         const userData = JSON.parse(storedUserData);
         // console.log('Retrieved login data from AsyncStorage:', userData);
         setid(userData.id);
+        setName(userData.name);
+        // setAccountType(userData.user_type);
 
         getdata(userData.id);
         return userData;

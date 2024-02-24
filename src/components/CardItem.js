@@ -9,10 +9,11 @@ import Fonts from '../../constants/Fonts';
 import styles from './carditem.style';
 import { imageGallery, list } from '../components/Data'
 import { useNavigation } from '@react-navigation/native';
+import Button from './Button';
 
 const Screen_width = Dimensions.get('window').width;
 
-const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiserInfo, showSavedIcon, showDonationInfo, savedView, imageView, data, profileView, titleText, seeAllText, hideContainer }) => {
+const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiserInfo, showSavedIcon, showDonationInfo, savedView, imageView, data, profileView, viewRequest }) => {
     const [savedItems, setSavedItems] = useState([]);
     const navigation = useNavigation();
 
@@ -61,6 +62,20 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
 
 
     return (
+<View>
+{/* view request */}
+ {viewRequest ?  <Button
+        title="Save"
+        filled
+        // onPress={validate}
+        onPress={() => navigation.navigate('ReceiverRequest', { itemId: item.id })}
+        style={{
+          marginTop: 20,
+          marginBottom: 40,
+        }}
+      />: null}
+       
+
 
             <Pressable style={[
                 styles.cardItem,
@@ -221,7 +236,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                 </View>
 
             </Pressable>
-       
+            </View>   
     );
 };
 

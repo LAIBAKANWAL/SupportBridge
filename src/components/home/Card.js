@@ -10,7 +10,7 @@ import CardItem from '../CardItem';
 import styles from '../carditem.style';
 // import {list} from '../components/Data'
 
-const Card = ({ horizontal, titleText, seeAllText, hideContainer, showHeartIcon, list, searchView, disablePress, showOrganiserInfo, showSavedIcon, showDonationInfo, savedView, imageView, profileView }) => {
+const Card = ({ horizontal, titleText, seeAllText, hideContainer, showHeartIcon, list, searchView, disablePress, showOrganiserInfo, showSavedIcon, showDonationInfo, savedView, imageView, profileView ,viewRequest}) => {
     const navigation = useNavigation();
 
     return (
@@ -43,10 +43,7 @@ const Card = ({ horizontal, titleText, seeAllText, hideContainer, showHeartIcon,
                         savedView={savedView}
                         imageView={imageView}
                         profileView={profileView}
-                        titleText={titleText}
-                        seeAllText={seeAllText}
-                        hideContainer={hideContainer}
-                        hide={true}
+                        viewRequest={viewRequest}
                     />
                 )}
                 keyExtractor={(item) => item.id}

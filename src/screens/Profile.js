@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SIZES from "../../constants/Sizes";
@@ -7,13 +7,71 @@ import Fonts from "../../constants/Fonts";
 import COLORS from "../../constants/Colors";
 import { useNavigation } from '@react-navigation/native';
 import Card from "../components/home/Card";
-import { list } from '../components/Data'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
 
   const [selectedBoxes, setSelectedBoxes] = useState([]);
   const navigation = useNavigation();
+  const [id, setid] = useState();
+  const [name, setName] = useState();
+  const [accountType, setAccountType] = useState();
+  const [alldata, setalldata] = useState({});
 
+  useEffect(() => {
+    getLoginDataFromStorage();
+  }, []);
+
+  const getLoginDataFromStorage = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem('user_data');
+      if (storedUserData) {
+
+        const userData = JSON.parse(storedUserData);
+
+        setid(userData.id);
+
+        setName(userData.name);
+        setAccountType(userData.user_type);
+        getdata(userData.id)
+        return userData;
+
+      } else {
+        console.log('No login data found in AsyncStorage.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error retrieving login data from AsyncStorage:', error);
+      return null;
+    }
+  };
+
+  // console.log('mere id:',id)
+
+  const getdata = async (id) => {
+    try {
+      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/fund-list/${id}`);
+
+      const sortedData = response.data.data.sort((a, b) => {
+        // Assuming your data has a property named createdAt or updatedAt
+        const dateA = new Date(a.created_at || a.updated_at);
+        const dateB = new Date(b.created_at || b.updated_at);
+
+        // Sort in descending order (latest first)
+        return dateB - dateA;
+      });
+
+
+      // setalldata(response.data.data)
+      setalldata(sortedData)
+      console.log('srteddata', sortedData)
+    } catch (error) {
+      console.error('Error fetching data:', error.response.data);
+    }
+  };
+
+console.log('alldata:',alldata)
   const handleBoxPress = (option) => {
     // Check if the option is already selected
     if (selectedBoxes.includes(option)) {
@@ -55,21 +113,6 @@ export default function Profile() {
         <View style={styles.infoContainer}>
           <Text style={[styles.text(SIZES.xLarge, COLORS.black, Fonts.medium)]}>Laiba Kanwal</Text>
         </View>
-
-        {/* <View style={styles.statsContainer}>
-          <View style={styles.statsBox}>
-            <Text style={styles.text(SIZES.large, COLORS.black, Fonts.medium)}>12</Text>
-            <Text style={styles.text(SIZES.medium - 2, COLORS.grey, Fonts.regular)}>Fundraising</Text>
-          </View>
-          <View style={[styles.statsBox, { borderColor: COLORS.lightGray, borderLeftWidth: 1, borderRightWidth: 1 }]}>
-            <Text style={styles.text(SIZES.large, COLORS.black, Fonts.medium)}>487</Text>
-            <Text style={styles.text(SIZES.medium - 2, COLORS.grey, Fonts.regular)}>Followers</Text>
-          </View>
-          <View style={styles.statsBox}>
-            <Text style={styles.text(SIZES.large, COLORS.black, Fonts.medium)}>126</Text>
-            <Text style={styles.text(SIZES.medium - 2, COLORS.grey, Fonts.regular)}>Following</Text>
-          </View>
-        </View> */}
 
         <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
 
@@ -156,7 +199,8 @@ export default function Profile() {
 
           <View>
             <Text style={styles.heading}>About</Text>
-            <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={list} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true}/>
+{/*             
+            <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={setalldata} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true} /> */}
 
           </View>
 

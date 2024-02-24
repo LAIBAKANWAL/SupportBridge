@@ -20,9 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function DonarForm() {
     const navigation = useNavigation();
 
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [isImageSelectModalVisible, setImageSelectModalVisible] = useState(false);
-    const [selectedImages, setSelectedImages] = useState([]); // Store selected images
     const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
     const [isBlurVisible, setBlurVisible] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
@@ -36,6 +33,18 @@ export default function DonarForm() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [id, setid] = useState();
+
+    const [isImageSelectModalVisible1, setImageSelectModalVisible1] = useState(false);
+    const [isImageSelectModalVisible2, setImageSelectModalVisible2] = useState(false);
+    const [isImageSelectModalVisible3, setImageSelectModalVisible3] = useState(false);
+
+    const [isModalVisible1, setModalVisible1] = useState(false);
+    const [isModalVisible2, setModalVisible2] = useState(false);
+    const [isModalVisible3, setModalVisible3] = useState(false);
+
+    const [image_1, setImage_1] = useState(null);
+    const [image_2, setImage_2] = useState(null);
+    const [image_3, setImage_3] = useState(null);
 
     const categories = [
         { label: 'Social', value: 'Social' },
@@ -78,87 +87,147 @@ export default function DonarForm() {
 
     console.log('me', id)
 
-    const maxImageLimit = 5;
-
     const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
-
-    const toggleImageSelectModal = () => {
-        setImageSelectModalVisible(!isImageSelectModalVisible);
-    };
-
-
-    const takePhotoFromCamera = () => {
-        if (selectedImages.length >= maxImageLimit) {
-            // Limit the number of images to the specified max
-            Alert.alert('Image limit reached.');
-            return;
-
+        if (!image_1) {
+            setModalVisible1(!isModalVisible1);
+        } else if (!image_2) {
+            setModalVisible2(!isModalVisible2);
+        } else if (!image_3) {
+            setModalVisible3(!isModalVisible3);
         }
-        ImagePicker.openCamera({
-            width: 300,
-            height: 400,
-            cropping: true,
-        })
-            .then(image => {
-                let imageData = [image];
-                if (imageData.length > 0) {
-                    setSelectedImages([...selectedImages, ...imageData]); // Set the selected images
-                    toggleModal(); // Close the modal
-                }
-            })
-            .catch((err) => {
-                console.log('Error fetching image from Camera roll', err);
-            });
+        else {
+            // Display an alert when all images are filled
+            Alert.alert('Alert', 'You have already selected three images.');
+        }
     };
 
-    const choosePhotosFromGallery = () => {
-        if (selectedImages.length >= maxImageLimit) {
-            // Limit the number of images to the specified max
-            Alert.alert('Image limit reached.');
-            return;
-        }
+
+    // const takePhotoFromCamera = () => {
+    //     if (selectedImages.length >= maxImageLimit) {
+    //         // Limit the number of images to the specified max
+    //         Alert.alert('Image limit reached.');
+    //         return;
+
+    //     }
+    //     ImagePicker.openCamera({
+    //         width: 300,
+    //         height: 400,
+    //         cropping: true,
+    //     })
+    //         .then(image => {
+    //             let imageData = [image];
+    //             if (imageData.length > 0) {
+    //                 setSelectedImages([...selectedImages, ...imageData]); // Set the selected images
+    //                 toggleModal(); // Close the modal
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log('Error fetching image from Camera roll', err);
+    //         });
+    // };
+
+
+
+    const toggleImageSelectModal1 = () => {
+        setImageSelectModalVisible1(!isImageSelectModalVisible1);
+    };
+    const toggleModal1 = () => {
+        setModalVisible1(!isModalVisible1);
+    };
+
+    const toggleImageSelectModal2 = () => {
+        setImageSelectModalVisible2(!isImageSelectModalVisible2);
+    };
+    const toggleModal2 = () => {
+        setModalVisible2(!isModalVisible2);
+    };
+
+    const toggleImageSelectModal3 = () => {
+        setImageSelectModalVisible3(!isImageSelectModalVisible3);
+    };
+    const toggleModal3 = () => {
+        setModalVisible3(!isModalVisible3);
+    };
+
+    const choosePhotosFromGallery1 = () => {
         ImagePicker.openPicker({
             width: 300,
-            height: 200,
-            multiple: true,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            console.log('image:', image)
+            const imagePath = image.path; // Path of the selected image
+            const imageName = imagePath.split('/').pop(); // Extracting the name from the path
+            const imageType = image.mime; // MIME type of the image
+
+            setImage_1({ imagePath, imageName, imageType });
+
+            toggleModal1(); // Close the modal
+
         })
-            .then(images => {
-                if (images.length > 0) {
-                    const remainingSlots = maxImageLimit - selectedImages.length; // Adjust the limit as needed
-                    const imagesToSelect = images.slice(0, remainingSlots);
-
-                    // Get the paths of the selected images
-                    const selectedImagePaths = imagesToSelect.map(image => image.path);
-                    // Set the selected image paths to state
-                    setSelectedImages(prevPaths => [...prevPaths, ...selectedImagePaths]);
-
-                    // console.log('Selected Image Paths:', selectedImagePaths);
-                    toggleModal(); // Close the modal
-                }
-            })
             .catch((err) => {
                 console.log('Error fetching images from gallery', err);
             });
     };
 
-    // console.log(selectedImages)
-    const removePhoto = (index) => {
-        const newImages = [...selectedImages];
-        newImages.splice(index, 1);
-        setSelectedImages(newImages);
-        toggleImageSelectModal();
+    const choosePhotosFromGallery2 = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            console.log('image:', image)
+            const imagePath = image.path; // Path of the selected image
+            const imageName = imagePath.split('/').pop(); // Extracting the name from the path
+            const imageType = image.mime; // MIME type of the image
+
+            setImage_2({ imagePath, imageName, imageType });
+
+            toggleModal2(); // Close the modal
+
+        })
+            .catch((err) => {
+                console.log('Error fetching images from gallery', err);
+            });
     };
 
-    const renderItem = ({ item }) => (
-        <TouchableOpacity
-            onPress={toggleImageSelectModal}
-        >
-            <Image source={{ uri: item }} style={styles.carouselImages} />
+    const choosePhotosFromGallery3 = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            console.log('image:', image)
+            const imagePath = image.path; // Path of the selected image
+            const imageName = imagePath.split('/').pop(); // Extracting the name from the path
+            const imageType = image.mime; // MIME type of the image
 
-        </TouchableOpacity>
-    );
+            setImage_3({ imagePath, imageName, imageType });
+
+            toggleModal3(); // Close the modal
+
+        })
+            .catch((err) => {
+                console.log('Error fetching images from gallery', err);
+            });
+    };
+
+    const removePhoto1 = () => {
+        // Remove the selected image
+        setImage_1({});
+        // Close the modal
+        toggleImageSelectModal1();
+    };
+
+    const removePhoto2 = () => {
+        setImage_2({});
+        toggleImageSelectModal2();
+    };
+
+    const removePhoto3 = () => {
+        setImage_3({});
+        toggleImageSelectModal3();
+    };
 
 
     const validate = () => {
@@ -168,7 +237,7 @@ export default function DonarForm() {
 
 
         // Check if at least one image is selected
-        if (selectedImages.length === 0) {
+        if (!image_1) {
             Alert.alert('Please select at least one image.');
             valid = false;
         }
@@ -212,40 +281,34 @@ export default function DonarForm() {
     };
 
     const create = async () => {
-        // setLoading(true);
 
         try {
+            setLoading(true);
             const formData = new FormData();
+
             // Append text data
             formData.append('title', title);
             formData.append('category', allcategories);
             formData.append('description', description);
             formData.append('terms_accept', isChecked ? 'yes' : 'no');
             formData.append('user_id', id);
+            formData.append('salary_slip', {
+                uri: image_1.imagePath,
+                type: image_1.imageType,
+                name: image_1.imageName,
+            });
+            formData.append('salary_slip', {
+                uri: image_2.imagePath,
+                type: image_2.imageType,
+                name: image_2.imageName,
+            });
+            formData.append('salary_slip', {
+                uri: image_3.imagePath,
+                type: image_3.imageType,
+                name: image_3.imageName,
+            });
 
-            // Append images
-            // selectedImages.forEach((image, index) => {
-            //     formData.append(`images[${index}]`, {
-            //         uri: image.replace("file://", ""),
-            //         type: 'image/jpeg', // Adjust the type based on your image type
-            //         name: `image_${index}.jpg`,
-            //     });
-            // });
-
-            // Append images
-            const imageUris = selectedImages.map(image => image.uri); // Extract image URIs
-            const imageTypes = imageUris.map(() => 'image/jpeg'); // Adjust based on actual image types
-            const imageNames = imageUris.map((uri, index) => `image_${index}.jpg`); // Generate unique names
-
-            for (let i = 0; i < imageUris.length; i++) {
-                formData.append('images[]', {
-                    uri: imageUris[i],
-                    type: imageTypes[i],
-                    name: imageNames[i],
-                });
-            }
-
-            const response = await fetch('https://app-api.demo-customwebsites.com/api/create-fund-request',{
+            const response = await fetch('https://app-api.demo-customwebsites.com/api/create-fund-request', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -253,57 +316,23 @@ export default function DonarForm() {
                 },
             });
             if (response.ok) {
-
-                const data = await response.json(); // Parse response data
-
-      console.log('Submit Successfully:', data.message);
-                // console.log('Submit Successfully:', response.message);
+                // console.log('create Successfully:', response.data);
 
                 setLoading(false);
                 openModal();
 
             }
+
             else {
                 setLoading(false);
-                const errorData = await response.json(); // Parse error data
-                Alert.alert('Error:', errorData.message || 'Failed to create fund'); // Use error message or default text
-              }
-            // else {
-            //     setLoading(false);
-            //     Alert.alert('Error:', 'Failed to create fund');
-            // }
+                Alert.alert('Error:', 'Failed to create fund');
+            }
         } catch (error) {
             setLoading(false);
             console.error('Error creating fund failed:', error);
 
         }
     };
-
-    console.log('image', selectedImages)
-
-    // const create = async () => {
-
-    //     setLoading(true);
-    //     try {
-    //         const response = await axios.post(`https://app-api.demo-customwebsites.com/api/create-fund-request`, {
-    //             title: title,
-    //             category: allcategories,
-    //             description: description,
-    //             terms_accept: isChecked ? "yes" : "no",
-    //             user_id: id,
-
-    //         });
-
-    //         console.log('Create Successfully:', response.data);
-
-    //         setLoading(false);
-    //         openModal();
-    //     }
-    //     catch (error) {
-    //         setLoading(false);
-    //         console.error('Error creatig fund failed:', error.response.data);
-    //     }
-    // };
 
     const handleError = (errorMessage, input) => {
         setErrors(prevState => ({ ...prevState, [input]: errorMessage }));
@@ -315,7 +344,6 @@ export default function DonarForm() {
             handleError(null, 'allcategories');
         }
     };
-
 
     const openModal = () => {
         setSubmitModalVisible(true);
@@ -329,7 +357,9 @@ export default function DonarForm() {
     };
 
     const resetState = () => {
-        setSelectedImages([]);
+        setImage_1(null)
+        setImage_2(null)
+        setImage_3(null)
         setTitle('');
         setAllCategories('');
         setDescription('');
@@ -351,7 +381,7 @@ export default function DonarForm() {
                 />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.container}>
+                {/* <View style={styles.container}>
                     <View style={styles.imageBox}>
                         <TouchableOpacity style={styles.uploadBox} onPress={toggleModal}>
                             <Text style={styles.boxText(SIZES.large)}>Upload Up To 5 Photos</Text>
@@ -408,7 +438,128 @@ export default function DonarForm() {
                         </View>
                     </Modal>
 
+                </View> */}
+
+                <View style={styles.container}>
+                    <View style={styles.imageBox}>
+                        <TouchableOpacity style={styles.uploadBox} onPress={toggleModal}>
+                            <Text style={styles.boxText(SIZES.large)}>Upload Up To 5 Photos</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.box}>
+                            {!image_1 || !image_1.imagePath ? (
+                                <TouchableOpacity onPress={toggleModal1} style={styles.alignment}>
+                                    <MaterialIcons name="add-circle-outline" size={28} color={COLORS.primary} style={{ paddingTop: 3 }} />
+                                    <Text style={styles.boxText(SIZES.large)}>Select Images</Text>
+                                </TouchableOpacity>
+                            ) : null}
+
+                            <View style={styles.carouselView}>
+                                {image_1 && image_1.imagePath ? (
+                                    <TouchableOpacity onPress={toggleImageSelectModal1}>
+                                        <Image source={{ uri: image_1.imagePath }} style={styles.carouselImages} />
+                                    </TouchableOpacity>
+                                ) : null}
+                                {image_2 && image_2.imagePath ? (
+                                    <TouchableOpacity onPress={toggleImageSelectModal2}>
+                                        <Image source={{ uri: image_2.imagePath }} style={styles.carouselImages} />
+                                    </TouchableOpacity>
+                                ) : null}
+                                {image_3 && image_3.imagePath ? (
+                                    <TouchableOpacity onPress={toggleImageSelectModal3}>
+                                        <Image source={{ uri: image_3.imagePath }} style={styles.carouselImages} />
+                                    </TouchableOpacity>
+                                ) : null}
+                            </View>
+
+                        </View>
+                    </View>
+
+
+
+                    <Modal isVisible={isModalVisible1} style={styles.modal} onBackdropPress={toggleModal1}>
+                        <View style={styles.modalContainer}>
+                            {/* <TouchableOpacity style={styles.modalButton} onPress={takePhotoFromCamera}>
+                                <Text style={styles.textStyle}>Take Photo</Text>
+                            </TouchableOpacity> */}
+                            <TouchableOpacity style={styles.modalButton} onPress={choosePhotosFromGallery1}>
+                                <Text style={styles.textStyle}>Choose from Gallery</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={toggleModal1}>
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+                    <Modal isVisible={isImageSelectModalVisible1} style={styles.modal} onBackdropPress={toggleImageSelectModal1}>
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity style={styles.modalButton} onPress={removePhoto1}>
+                                <Text style={styles.textStyle}>Remove</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={toggleImageSelectModal1}>
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+                    {/* ....... */}
+
+
+                    <Modal isVisible={isModalVisible2} style={styles.modal} onBackdropPress={toggleModal2}>
+                        <View style={styles.modalContainer}>
+                            {/* <TouchableOpacity style={styles.modalButton} onPress={takePhotoFromCamera}>
+                                <Text style={styles.textStyle}>Take Photo</Text>
+                            </TouchableOpacity> */}
+                            <TouchableOpacity style={styles.modalButton} onPress={choosePhotosFromGallery2}>
+                                <Text style={styles.textStyle}>Choose from Gallery</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={toggleModal2}>
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+                    <Modal isVisible={isImageSelectModalVisible2} style={styles.modal} onBackdropPress={toggleImageSelectModal2}>
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity style={styles.modalButton} onPress={removePhoto2}>
+                                <Text style={styles.textStyle}>Remove</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={toggleImageSelectModal2}>
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+                    {/* ...... */}
+
+
+                    <Modal isVisible={isModalVisible3} style={styles.modal} onBackdropPress={toggleModal3}>
+                        <View style={styles.modalContainer}>
+                            {/* <TouchableOpacity style={styles.modalButton} onPress={takePhotoFromCamera}>
+                                <Text style={styles.textStyle}>Take Photo</Text>
+                            </TouchableOpacity> */}
+                            <TouchableOpacity style={styles.modalButton} onPress={choosePhotosFromGallery3}>
+                                <Text style={styles.textStyle}>Choose from Gallery</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={toggleModal3}>
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+                    <Modal isVisible={isImageSelectModalVisible3} style={styles.modal} onBackdropPress={toggleImageSelectModal3}>
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity style={styles.modalButton} onPress={removePhoto3}>
+                                <Text style={styles.textStyle}>Remove</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={toggleImageSelectModal3}>
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+
                 </View>
+
 
                 <View style={{ marginHorizontal: SIZES.medium }}>
 
