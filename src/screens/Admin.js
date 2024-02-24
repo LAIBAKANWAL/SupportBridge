@@ -14,6 +14,7 @@ const Admin = () => {
     { id: 2, color: '#f7dcdf', icon: require('../../assets/images/bullet-list.png'), label: 'Items', count: 10 ,screen: 'Items',},
     { id: 3, color: '#fae3ac', icon: require('../../assets/images/group.png'), label: 'Users', count: 20, screen: 'Users', },
     { id: 4, color: '#dce9fa', icon: require('../../assets/images/request.png'), label: 'Receiver Request', count: 10,screen: 'ReceiverRequest', },
+    { id: 5, color: '#dce9fa', icon: require('../../assets/images/request.png'), label: 'fund Request', count: 15,screen: 'FundRequest'},
     // Add more boxes as needed
   ];
   return (

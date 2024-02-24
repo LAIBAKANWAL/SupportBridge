@@ -319,9 +319,9 @@ export default function EditProfileScreen() {
             />
           </View>
 
-          <TouchableOpacity style={styles.dm} activeOpacity={0.7} onPress={() => navigation.navigate("Inbox")}>
+          {/* <TouchableOpacity style={styles.dm} activeOpacity={0.7} onPress={() => navigation.navigate("Inbox")}>
             <MaterialIcons name="chat" size={15} color="#DFD8C8"></MaterialIcons>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={styles.active}></View>
           <TouchableOpacity style={styles.add} activeOpacity={0.7} onPress={toggleModal}>
             <MaterialIcons name="edit" size={20} color="#DFD8C8" ></MaterialIcons>

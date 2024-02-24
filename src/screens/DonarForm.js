@@ -212,7 +212,7 @@ export default function DonarForm() {
     };
 
     const create = async () => {
-        setLoading(true);
+        // setLoading(true);
 
         try {
             const formData = new FormData();
@@ -226,64 +226,61 @@ export default function DonarForm() {
             // Append images
             // selectedImages.forEach((image, index) => {
             //     formData.append(`images[${index}]`, {
-            //         // formData.append(`images[]`, {
-
-            //         uri: image,
+            //         uri: image.replace("file://", ""),
             //         type: 'image/jpeg', // Adjust the type based on your image type
             //         name: `image_${index}.jpg`,
             //     });
             // });
 
-            selectedImages.forEach((path, index) => {
-                formData.append(`images${index}`, {
-                    uri: path,
-                    type: 'image/jpeg', // Adjust the type based on your image type
-                    name: `image_${index + 1}.jpg`,
-                });
-            });
-            console.log('images', selectedImages)
+            // Append images
+            const imageUris = selectedImages.map(image => image.uri); // Extract image URIs
+            const imageTypes = imageUris.map(() => 'image/jpeg'); // Adjust based on actual image types
+            const imageNames = imageUris.map((uri, index) => `image_${index}.jpg`); // Generate unique names
 
-            const response = await fetch('https://app-api.demo-customwebsites.com/api/create-fund-request', formData, {
+            for (let i = 0; i < imageUris.length; i++) {
+                formData.append('images[]', {
+                    uri: imageUris[i],
+                    type: imageTypes[i],
+                    name: imageNames[i],
+                });
+            }
+
+            const response = await fetch('https://app-api.demo-customwebsites.com/api/create-fund-request',{
                 method: 'POST',
                 body: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-
             });
-
-            //     console.log('Create Successfully:', response.message);
-            //     //  console.log('Create Successfully:', response.data);
-
-            //     setLoading(false);
-            //     openModal();
-            // } catch (error) {
-            //     setLoading(false);
-            //     // console.log('Error creating fund failed:', error.message);
-            //     console.error('Error creatig fund failed:', error.response.data);
-
-            // }
             if (response.ok) {
 
-                console.log('Submit Successfully:', response.data);
+                const data = await response.json(); // Parse response data
+
+      console.log('Submit Successfully:', data.message);
+                // console.log('Submit Successfully:', response.message);
 
                 setLoading(false);
                 openModal();
 
-            } else {
-                setLoading(false);
-                Alert.alert('Error:', 'Failed to create fund');
             }
+            else {
+                setLoading(false);
+                const errorData = await response.json(); // Parse error data
+                Alert.alert('Error:', errorData.message || 'Failed to create fund'); // Use error message or default text
+              }
+            // else {
+            //     setLoading(false);
+            //     Alert.alert('Error:', 'Failed to create fund');
+            // }
         } catch (error) {
             setLoading(false);
             console.error('Error creating fund failed:', error);
 
-            // console.error('Error creatig fund failed:', error.response.data);
-
         }
     };
 
-    console.log('img', selectedImages);
+    console.log('image', selectedImages)
+
     // const create = async () => {
 
     //     setLoading(true);

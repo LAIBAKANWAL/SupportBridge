@@ -34,6 +34,8 @@ import ReceiverRequest from './src/screens/ReceiverRequest';
 import Categories from './src/screens/Categories';
 import RequestInfo from './src/screens/RequestInfo';
 import CategoryList from './src/screens/CategoryList';
+import FundRequest from './src/screens/FundRequest';
+
 export{
     Signup,
     Login,
@@ -60,5 +62,6 @@ export{
     ReceiverRequest,
     Categories,
     RequestInfo,
-    CategoryList
+    CategoryList,
+    FundRequest,
 }

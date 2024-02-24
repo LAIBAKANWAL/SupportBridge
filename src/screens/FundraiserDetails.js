@@ -27,8 +27,7 @@ const FundraiserDetails = ({ route }) => {
        getdata(itemId)
        getDonarData(fundDetails.user_id)
     },[itemId,fundDetails.user_id]);
-
-
+    
     const getdata = async (id) => {
         try {
           const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-fund/${id}`);

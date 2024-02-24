@@ -91,7 +91,7 @@ export default function ReceiverForm({ route }) {
         }
     };
 
-
+console.log('fundid:',fundId)
 
     const validate = () => {
         Keyboard.dismiss();

@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
               active: {
                 backgroundColor: "#34FFB9",
                 position: "absolute",
-                bottom: 28,
-                left: -5,
+                bottom: 65,
+                left: -4,
                 height: 15,
                 width: 15,
                 borderRadius: 10

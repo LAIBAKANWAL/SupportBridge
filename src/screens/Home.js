@@ -26,9 +26,6 @@ const Home = () => {
   const [socialData, setSocialData] = useState([]);
   const [disasterData, setDisasterData] = useState([]);
 
-
-  // const [alldata, setalldata] = useState({});
-
   const [alldata, setalldata] = useState([]);
 
 
@@ -63,47 +60,26 @@ const Home = () => {
     }
   };
 
-
-  //   const getdata = async () => {
-  //     try {
-  //       const response = await axios.get('https://app-api.demo-customwebsites.com/api/front-fund-list');
-  //       // setalldata(response.data.data);
-
-  //       // Extract unique user IDs
-  // //       const uniqueUserIdsObject = {};
-  // //       response.data.data.forEach(item => {
-  // //         if (!uniqueUserIdsObject[item.user_id]) {
-  // //           uniqueUserIdsObject[item.user_id] = [item];
-  // //         }
-  // //         //  else {
-  // //         //   uniqueUserIdsObject[item.user_id].push(item);
-  // //         // }
-  // //       });
-  // //       const flattenedData = Object.values(uniqueUserIdsObject).flat();
-  // //       setalldata(flattenedData)
-  // // console.log(flattenedData)
-  // setalldata(response.data.data)
-
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error.response.data);
-  //     }
-  //   };
-
   const getdata = async (userId, category, setalldata) => {
     try {
       const response = await axios.get(`https://app-api.demo-customwebsites.com/api/front-fund-category/${category}?user_id=${userId}`);
 
-      setalldata(response.data.data)
-      console.log(response.data.data)
+      const sortedData = response.data.data.sort((a, b) => {
+        // Assuming your data has a property named createdAt or updatedAt
+        const dateA = new Date(a.created_at || a.updated_at);
+        const dateB = new Date(b.created_at || b.updated_at);
+        
+        // Sort in descending order (latest first)
+        return dateB - dateA;
+      });
+  
+
+      // setalldata(response.data.data)
+      setalldata(sortedData)
+      console.log('srteddata',sortedData)
     } catch (error) {
       console.error('Error fetching data:', error.response.data);
     }
-  };
-console.log(id)
-
-  const filterData = (category) => {
-    // Function to dynamically filter based on category
-    return alldata.filter((item) => item.category === category);
   };
 
   return (
@@ -204,29 +180,26 @@ console.log(id)
           </ScrollView>
         </View>
 
-        {educationData.length > 0 ? (
-          <Card horizontal={true} titleText="Education" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={educationData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
-        ) : null}
+        <View style={{ marginHorizontal: SIZES.small -5}}>
+          {educationData.length > 0 ? (
+            <Card horizontal={true} titleText="Education" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={educationData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
+          ) : null}
 
 
-        {humanityData.length > 0 ? (
-          <Card horizontal={true} titleText="Humaninty" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={humanityData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
-        ) : null}
+          {humanityData.length > 0 ? (
+            <Card horizontal={true} titleText="Humaninty" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={humanityData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
+          ) : null}
 
-        {socialData.length > 0 ? (
-          <Card horizontal={true} titleText="Social" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={socialData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
-        ) : (null
-          // <View>
-          //   {/* You can render a placeholder or nothing when there's no data */}
-          //  {/* <Text style={{color:COLORS.black}}>No Medical Fundraisers available</Text> */}
-          // </View>
-        )}
-
-        {/* <Card horizontal={true} titleText="Humaninty Fundraisers" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={filterData('Humaninty')} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} /> */}
-
-        <Card horizontal={true} titleText="Humaninty Fundraisers" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={list} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
-
-
+          {socialData.length > 0 ? (
+            <Card horizontal={true} titleText="Social" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={socialData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
+          ) : (null
+            // <View>
+            //   {/* You can render a placeholder or nothing when there's no data */}
+            //  {/* <Text style={{color:COLORS.black}}>No Medical Fundraisers available</Text> */}
+            // </View>
+          )}
+        </View>
+        <View style={{ marginBottom: 25 }} />
       </ScrollView>
 
     </SafeAreaView>
