@@ -8,6 +8,7 @@ import Saved from './Saved';
 import DonarForm from './DonarForm';
 import ReceiverForm from './ReceiverForm';
 import Admin from './Admin';
+import MyAds from './MyAds';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -176,8 +177,8 @@ const BottomNavigation = () => {
       />
 
       <Tab.Screen
-        name="Admin"
-        component={Admin}
+        name="MyAds"
+        component={MyAds}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

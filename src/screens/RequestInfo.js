@@ -13,8 +13,33 @@ import DocumentPicker from 'react-native-document-picker';
 import Checkbox from '../components/checkbox/Checkbox';
 import { useNavigation } from '@react-navigation/native';
 import styles from './create.style';
+import axios from 'axios';
 
-export default function RequestInfo() {
+export default function RequestInfo({route}) {
+    const navigation = useNavigation();
+    const [alldata, setalldata] = useState([]);
+    const { itemId } = route.params;
+
+    useEffect(() => {
+        getdata(itemId);
+    }, [itemId]);
+
+    const getdata = async (id) => {
+        try {
+            const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-user-request/2`);
+
+            console.log('get fund request Successfully:', response.data);
+            setalldata(response.data.data);
+            console.log('databchc',response.data.data.name)
+        }
+        catch (error) {
+     
+            console.error('Error get fund request:', error.response.data);
+
+        }
+    };
+
+    console.log(alldata.name)
 
     const [inputs, setInputs] = useState({
         fullname: "",
@@ -34,8 +59,8 @@ export default function RequestInfo() {
         <SafeAreaView
             style={{ flex: 1, backgroundColor: COLORS.white }}>
             <View style={{ marginHorizontal: SIZES.small - 6 }}>
-                <Header
-                    title="View Receiver Request"
+                 <Header
+                    title="View Receiver Details"
                     showBackButton
                 />
             </View>
@@ -52,18 +77,19 @@ export default function RequestInfo() {
                             color: COLORS.black,
                             // textAlign: "center"
                         }}>
-                            Donar Form Details
+                            Receiver Form Details
                         </Text>
                     </View>
 
                     <Label text="Full Name" />
                     <InputField
-                        value={inputs.fullname}
+                        // value={alldata.name}
+                        value={'bcxmvb,m'}
                     />
 
                     <Label text="Address" />
                     <InputField
-                        value={inputs.address}
+                        value={alldata.address}
                     />
 
                     <Label text="Postal Code" />

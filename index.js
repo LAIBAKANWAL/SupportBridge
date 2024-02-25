@@ -35,6 +35,7 @@ import Categories from './src/screens/Categories';
 import RequestInfo from './src/screens/RequestInfo';
 import CategoryList from './src/screens/CategoryList';
 import FundRequest from './src/screens/FundRequest';
+import MyAds from './src/screens/MyAds';
 
 export{
     Signup,
@@ -64,4 +65,5 @@ export{
     RequestInfo,
     CategoryList,
     FundRequest,
+    MyAds
 }

@@ -36,10 +36,10 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
     };
 
     const onPressHandler = disablePress
-        ? undefined // Set to undefined to disabe onPress
-        // : () => navigation.navigate('FundraiserDetails', { cardId: item.id, cardList: {list} });
-        // : () => navigation.navigate('FundraiserDetails', { cardId: item.id, cardList: data });
-        : () => navigation.navigate('FundraiserDetails', { itemId: item.id });
+    ? undefined // Set to undefined to disable onPress
+    : viewRequest
+      ? () => navigation.navigate('ReceiverRequest', { itemId: item.id })
+      : () => navigation.navigate('FundraiserDetails', { itemId: item.id });
 
     const calculateDaysDifference = (dateString) => {
         const currentDate = new Date();
@@ -63,20 +63,18 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
 
     return (
 <View>
-{/* view request */}
+{/* view request
  {viewRequest ?  <Button
         title="Save"
         filled
         // onPress={validate}
-        onPress={() => navigation.navigate('ReceiverRequest', { itemId: item.id })}
+        // onPress={() => navigation.navigate('ReceiverRequest', { itemId: item.id })}
         style={{
           marginTop: 20,
           marginBottom: 40,
         }}
-      />: null}
+      />: null} */}
        
-
-
             <Pressable style={[
                 styles.cardItem,
                 searchView ?

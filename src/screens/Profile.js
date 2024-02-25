@@ -65,13 +65,14 @@ export default function Profile() {
 
       // setalldata(response.data.data)
       setalldata(sortedData)
-      console.log('srteddata', sortedData)
+      // console.log('srteddata', sortedData)
     } catch (error) {
       console.error('Error fetching data:', error.response.data);
     }
   };
 
 console.log('alldata:',alldata)
+
   const handleBoxPress = (option) => {
     // Check if the option is already selected
     if (selectedBoxes.includes(option)) {
@@ -198,9 +199,10 @@ console.log('alldata:',alldata)
           </View>
 
           <View>
+
             <Text style={styles.heading}>About</Text>
-{/*             
-            <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={setalldata} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true} /> */}
+          
+            {/* <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={alldata} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true} viewRequest={true}/>  */}
 
           </View>
 

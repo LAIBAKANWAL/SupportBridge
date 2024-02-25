@@ -76,7 +76,7 @@ const Home = () => {
 
       // setalldata(response.data.data)
       setalldata(sortedData)
-      console.log('srteddata',sortedData)
+      // console.log('srteddata',sortedData)
     } catch (error) {
       console.error('Error fetching data:', error.response.data);
     }

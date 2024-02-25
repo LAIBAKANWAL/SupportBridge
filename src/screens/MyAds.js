@@ -20,36 +20,66 @@ import Card from '../components/home/Card';
 import { list } from '../components/Data';
 import { categories } from '../components/Data';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AllCategories = ({ route }) => {
+const MyAds = ({ route }) => {
   const [searchBarFocused, setSearchBarFocused] = useState(true);
   const [searchText, setSearchText] = useState('');
-  const [selectedCategories, SetSelectedCategories] = useState('');
   const [filteredList, setFilteredList] = useState([]);
+  const [id, setid] = useState();
+  const [alldata, setalldata] = useState({});
+  const [categoryData, setCategoryData] = useState([])
+//   const { categoryName } = route.params;
+const { categoryName } = 'education';
 
-  const { categoryName } = route.params;
-  const [categoryData, setCategoryData] = useState([]);
-  // console.log(categoryName)
 
+  useEffect(() => {
+    getLoginDataFromStorage();
+  }, []);
 
   useEffect(() => {
     fetchDataForCategory(categoryName);
   }, [categoryName]);
 
+  const getLoginDataFromStorage = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem('user_data');
+      if (storedUserData) {
 
-  useEffect(() => {
-    filterData();
-  }, [searchText, categoryData]); // Update filteredList when searchText or categoryData changes
+        const userData = JSON.parse(storedUserData);
 
-  const filterData = () => {
-    if (searchText) {
-      setFilteredList(
-        categoryData.filter(item =>
-          item.title.toLowerCase().includes(searchText.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredList(categoryData); // Show all data when searchText is empty
+        setid(userData.id);
+        getdata(userData.id)
+        return userData;
+
+      } else {
+        console.log('No login data found in AsyncStorage.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error retrieving login data from AsyncStorage:', error);
+      return null;
+    }
+  };
+
+  const getdata = async (id) => {
+    try {
+      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/fund-list/${id}`);
+
+      const sortedData = response.data.data.sort((a, b) => {
+        // Assuming your data has a property named createdAt or updatedAt
+        const dateA = new Date(a.created_at || a.updated_at);
+        const dateB = new Date(b.created_at || b.updated_at);
+
+        // Sort in descending order (latest first)
+        return dateB - dateA;
+      });
+
+
+      setalldata(sortedData)
+
+    } catch (error) {
+      console.error('Error fetching data:', error.response.data);
     }
   };
 
@@ -63,6 +93,24 @@ const AllCategories = ({ route }) => {
       console.error(`Error fetching ${selectedCategory} data:`, error.response.data);
     }
   };
+ 
+  useEffect(() => {
+    filterData();
+  }, [searchText, alldata]); // Update filteredList when searchText or categoryData changes
+
+  const filterData = () => {
+    if (searchText) {
+      setFilteredList(
+        alldata.filter(item =>
+          item.title.toLowerCase().includes(searchText.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredList(alldata); // Show all data when searchText is empty
+    }
+  };
+
+
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
@@ -101,19 +149,11 @@ const AllCategories = ({ route }) => {
     unfocusSearchBar();
   };
 
-  //       // Filter items based on search text and selected category
-  // const filteredList = list.filter(item =>
-  //   (searchText ? item.name.toLowerCase().includes(searchText.toLowerCase()) : true) &&
-  //   (selectedCategories ? item.category === selectedCategories : true)
-  // );
-
-
-
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white }}>
       <View style={{ marginHorizontal: SIZES.small - 6 }}>
         <Header
-          title="Fundraising"
+          title="My Ads"
           showBackButton
           showFilterButton
         />
@@ -175,9 +215,11 @@ const AllCategories = ({ route }) => {
           </Pressable>
 
 
-          <Text style={{ color: COLORS.primary ,marginLeft:10, marginBottom:10}}>Showing: <Text style={{ color: COLORS.grey }}>Results for {categoryName}</Text></Text>
-          
-          <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={filteredList} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} />
+          {/* <Text style={{ color: COLORS.primary ,marginLeft:10, marginBottom:10}}>Showing: <Text style={{ color: COLORS.grey }}>Results for {categoryName}</Text></Text>
+           */}
+          <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={filteredList} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} viewRequest={true}/>
+
+     {/* <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={alldata} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true} viewRequest={true}/>  */}
 
         </ScrollView>
       </View>
@@ -186,4 +228,4 @@ const AllCategories = ({ route }) => {
   );
 };
 
-export default AllCategories;
+export default MyAds;

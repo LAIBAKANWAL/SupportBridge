@@ -16,10 +16,6 @@ const FilterModal = ({
   setSelectedCategory,
   navigation
 }) => {
-
-  console.log(selectedCategory)
-
-  // const [selectedCategory, setSelectedCategory] = useState(null);
   
     const renderRadioButton = (item) => {
       const isSelected = selectedCategory === item.name;
