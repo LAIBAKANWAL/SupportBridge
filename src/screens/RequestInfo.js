@@ -14,6 +14,7 @@ import Checkbox from '../components/checkbox/Checkbox';
 import { useNavigation } from '@react-navigation/native';
 import styles from './create.style';
 import axios from 'axios';
+import ZoomableImageModal from '../components/ZoomableImageModal';
 
 export default function RequestInfo({ route }) {
     const navigation = useNavigation();
@@ -30,6 +31,11 @@ export default function RequestInfo({ route }) {
     const [currentProfession, setCurrentProfession] = useState();
     const [description, setDescription] = useState();
     const [disability, setDisability] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
 
 
     useEffect(() => {
@@ -71,7 +77,7 @@ export default function RequestInfo({ route }) {
                 setBill("https://app-api.demo-customwebsites.com/" + alldata.bill);
             }
         }
-    }, [itemId,alldata]);
+    }, [itemId, alldata]);
 
     const getdata = async (id) => {
         try {
@@ -88,7 +94,7 @@ export default function RequestInfo({ route }) {
         }
     };
 
-  
+
     return (
 
         <SafeAreaView
@@ -116,24 +122,24 @@ export default function RequestInfo({ route }) {
                         </Text>
                     </View>
 
-                    
-                            <Label text="Full Name" />
-                            <InputField value={name} editable={false}/>
-                     
+
+                    <Label text="Full Name" />
+                    <InputField value={name} editable={false} />
+
 
                     <Label text="Address" />
                     <InputField
-                       value={address} editable={false}
+                        value={address} editable={false}
                     />
 
                     <Label text="Postal Code" />
                     <InputField
-                       value={postalCode} editable={false}
+                        value={postalCode} editable={false}
                     />
 
                     <Label text="Status" />
                     <InputField
-                       value={status} editable={false}
+                        value={status} editable={false}
                     />
 
                     <Label text="Family members" />
@@ -142,7 +148,7 @@ export default function RequestInfo({ route }) {
                     />
 
                     <Label text="Education" />
-                     <InputField
+                    <InputField
                         value={education} editable={false}
                     />
 
@@ -157,26 +163,53 @@ export default function RequestInfo({ route }) {
                     />
 
                     <Label text="Upload Salary Slip" />
-                    <Image
-                        source={{uri: salarySlip}}
-                        style={{
-                            width: 100,
-                            height: 100,
-                            borderRadius: 5,
-                            marginBottom: 15,
-                        }} />
+                    <View>
+                        <TouchableOpacity onPress={toggleModal}>
+                            <Image
+                                source={{ uri: salarySlip }}
+                                style={{
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 5,
+                                    marginBottom: 15,
+                                }} />
+                        </TouchableOpacity>
+                        <ZoomableImageModal
+                            visible={isModalVisible}
+                            imageUri={salarySlip}
+                            onClose={toggleModal}
+                        />
+
+                    </View>
 
                     <Label text="Upload Bill" />
-                    <Image
-                        source={{uri: bill}}
+                    {/* <Image
+                        source={{ uri: bill }}
                         style={{
                             width: 100,
                             height: 100,
                             borderRadius: 5,
                             marginBottom: 15,
-                        }} />
-                
-                   
+                        }} /> */}
+                    <View>
+                        <TouchableOpacity onPress={toggleModal}>
+                            <Image
+                                source={{ uri: bill }}
+                                style={{
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 5,
+                                    marginBottom: 15,
+                                }} />
+                        </TouchableOpacity>
+                        <ZoomableImageModal
+                            visible={isModalVisible}
+                            imageUri={bill}
+                            onClose={toggleModal}
+                        />
+
+                    </View>
+
                     <Label text="Any disability" />
                     <InputField
                         value={disability} editable={false}
@@ -209,10 +242,8 @@ export default function RequestInfo({ route }) {
                         }}
                     />
                 </View>
+
             </ScrollView>
-
-
-
         </SafeAreaView>
 
     );

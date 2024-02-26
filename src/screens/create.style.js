@@ -197,13 +197,24 @@ const styles = StyleSheet.create({
               add: {
                     backgroundColor: "#41444B",
                     position: "absolute",
-                    bottom: -5,
-                    right: -5,
+                    bottom: -2,
+                    right: -3,
                     width: 30,
                     height: 30,
                     borderRadius: 30,
                     alignItems: "center",
                     justifyContent: "center"
+                  },
+                  imageViewer: {
+                    flex: 1,
+                    backgroundColor: 'black',
+                  },
+                  closeButton: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                   },
   });
 

@@ -36,23 +36,21 @@ const AllCategories = ({ route }) => {
     fetchDataForCategory(categoryName);
   }, [categoryName]);
 
-
   useEffect(() => {
     filterData();
   }, [searchText, categoryData]); // Update filteredList when searchText or categoryData changes
 
+
   const filterData = () => {
     if (searchText) {
-      setFilteredList(
-        categoryData.filter(item =>
-          item.title.toLowerCase().includes(searchText.toLowerCase())
-        )
+      const filteredData = categoryData.filter(item =>
+        item.title.toLowerCase().includes(searchText.toLowerCase())
       );
+      setFilteredList(filteredData);
     } else {
       setFilteredList(categoryData); // Show all data when searchText is empty
     }
   };
-
 
   const fetchDataForCategory = async (selectedCategory) => {
     try {
@@ -101,86 +99,103 @@ const AllCategories = ({ route }) => {
     unfocusSearchBar();
   };
 
-  //       // Filter items based on search text and selected category
-  // const filteredList = list.filter(item =>
-  //   (searchText ? item.name.toLowerCase().includes(searchText.toLowerCase()) : true) &&
-  //   (selectedCategories ? item.category === selectedCategories : true)
-  // );
-
-
 
   return (
-    <SafeAreaView style={{ backgroundColor: COLORS.white }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={{ marginHorizontal: SIZES.small - 6 }}>
         <Header
           title="Fundraising"
           showBackButton
           showFilterButton
         />
-        <ScrollView showsHorizontalScrollIndicator={false} style={{ marginBottom: 160 }}>
+      </View>
 
-          <Pressable>
-            <View style={{ flexDirection: 'row' }}>
+      <View style={{ marginRight: SIZES.small }}>
+        <Pressable>
+          <View style={{ flexDirection: 'row' }}>
 
-              <Animatable.View
-                animation="slideInRight"
-                duration={500}
-                easing={Easing.linear}
-                style={[
-                  styles.searchContainer,
-                  { width: searchBarFocused ? '80%' : '96%' },
-                ]}
-              >
+            <Animatable.View
+              animation="slideInRight"
+              duration={500}
+              easing={Easing.linear}
+              style={[
+                styles.searchContainer,
+                { width: searchBarFocused ? '80%' : '96%' },
+              ]}
+            >
 
-                <View style={styles.searchWrapper}>
-                  <TextInput
-                    ref={searchInputRef} // Assign the ref to the TextInput
-                    style={styles.searchInput}
-                    placeholderTextColor={'grey'}
-                    placeholder="Search item"
-                    value={searchText}
-                    onChangeText={(text) => {
-                      // onSearch(text)
-                      setSearchText(text)
-                    }}
-                  // onFocus={handleSearchBarFocus}
-                  />
-                </View>
-
-                <View
-                  style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, height: 35, marginTop: 5 }}
-                ></View>
-                <TouchableOpacity
-                  style={styles.voiceSearch}
-                >
-                  <Ionicons name="mic-outline" size={24} color={COLORS.grey} />
-                </TouchableOpacity>
-
-              </Animatable.View >
-
-              <View style={styles.closeContainer}>
-                <Animatable.View animation="fadeIn" duration={500} easing="ease-in-out">
-
-                  <TouchableOpacity
-                    style={styles.closeBtn}
-                    onPress={handleCloseBtnPress}
-                  >
-                    <Text style={{ color: COLORS.grey, fontFamily: Fonts.bold }}>Cancel</Text>
-                  </TouchableOpacity>
-                </Animatable.View>
+              <View style={styles.searchWrapper}>
+                <TextInput
+                  ref={searchInputRef} // Assign the ref to the TextInput
+                  style={styles.searchInput}
+                  placeholderTextColor={'grey'}
+                  placeholder="Search item"
+                  value={searchText}
+                  onChangeText={(text) => {
+                    // onSearch(text)
+                    setSearchText(text)
+                  }}
+                // onFocus={handleSearchBarFocus}
+                />
               </View>
 
+              <View
+                style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, height: 35, marginTop: 5 }}
+              ></View>
+              <TouchableOpacity
+                style={styles.voiceSearch}
+              >
+                <Ionicons name="mic-outline" size={24} color={COLORS.grey} />
+              </TouchableOpacity>
 
+            </Animatable.View >
+
+            <View style={styles.closeContainer}>
+              <Animatable.View animation="fadeIn" duration={500} easing="ease-in-out">
+
+                <TouchableOpacity
+                  style={styles.closeBtn}
+                  onPress={handleCloseBtnPress}
+                >
+                  <Text style={{ color: COLORS.grey, fontFamily: Fonts.bold }}>Cancel</Text>
+                </TouchableOpacity>
+              </Animatable.View>
             </View>
-          </Pressable>
 
 
-          <Text style={{ color: COLORS.primary ,marginLeft:10, marginBottom:10}}>Showing: <Text style={{ color: COLORS.grey }}>Results for {categoryName}</Text></Text>
-          
-          <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={filteredList} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} />
-
-        </ScrollView>
+          </View>
+        </Pressable>
       </View>
+      <ScrollView showsHorizontalScrollIndicator={false} style={{ marginHorizontal: SIZES.xSmall - 4 }}>
+
+        {filteredList.length === 0 ? (
+          <View>
+            <Text style={{ color: COLORS.primary, marginLeft: 10, marginBottom: 10 }}>
+              No results found for "{searchText}"
+            </Text>
+            <View style={{
+              // flex: 1,
+              marginTop: 150, alignItems: 'center',
+            }}>
+              <Image
+                source={require('../../assets/images/no-results.png')}
+                resizeMode="contain"
+              />
+            </View>
+          </View>
+        ) : (
+          <Text style={{ color: COLORS.primary, marginLeft: 10, marginBottom: 10 }}>
+            Showing: <Text style={{ color: COLORS.grey }}>Results for {categoryName}</Text>
+          </Text>
+        )}
+
+        <View style={{ marginHorizontal: SIZES.xSmall - 8 }}>
+
+          <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={filteredList} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} />
+        </View>
+        <View style={{ marginBottom: 10 }} />
+      </ScrollView>
+
     </SafeAreaView>
 
   );

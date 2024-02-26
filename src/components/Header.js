@@ -50,6 +50,7 @@ const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filte
     navigation.navigate("AllCategories", { categoryName: category });
   };
 
+  
   const handleSharePress = () => {
 
     const options = {

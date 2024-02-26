@@ -37,6 +37,14 @@ const { categoryName } = 'education';
     getLoginDataFromStorage();
   }, []);
 
+  // useEffect(() => {
+  //   if (categoryName) {
+  //     fetchDataForCategory(categoryName);
+  //   } else {
+  //     getdata(id);
+  //   }
+  // }, [categoryName]);
+
   useEffect(() => {
     fetchDataForCategory(categoryName);
   }, [categoryName]);

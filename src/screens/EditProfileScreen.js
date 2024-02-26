@@ -326,7 +326,7 @@ export default function EditProfileScreen() {
           </TouchableOpacity> */}
           <View style={styles.active}></View>
           <TouchableOpacity style={styles.add} activeOpacity={0.7} onPress={toggleModal}>
-            <MaterialIcons name="edit" size={20} color="#DFD8C8" ></MaterialIcons>
+            <MaterialIcons name="camera-alt" size={17} color="#DFD8C8" ></MaterialIcons>
           </TouchableOpacity>
 
 
