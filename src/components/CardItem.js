@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, ImageBackground, Pressable, FlatList, Dimensions, Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Progress from 'react-native-progress';
 import COLORS from '../../constants/Colors';
 import SIZES from '../../constants/Sizes';
@@ -9,6 +10,7 @@ import Fonts from '../../constants/Fonts';
 import styles from './carditem.style';
 import { imageGallery, list } from '../components/Data'
 import { useNavigation } from '@react-navigation/native';
+import Modal from 'react-native-modal';
 import Button from './Button';
 
 const Screen_width = Dimensions.get('window').width;
@@ -16,6 +18,7 @@ const Screen_width = Dimensions.get('window').width;
 const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiserInfo, showSavedIcon, showDonationInfo, savedView, imageView, data, profileView, viewRequest }) => {
     const [savedItems, setSavedItems] = useState([]);
     const navigation = useNavigation();
+    const [isModalVisible, setModalVisible] = useState(false);
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -36,10 +39,10 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
     };
 
     const onPressHandler = disablePress
-    ? undefined // Set to undefined to disable onPress
-    : viewRequest
-      ? () => navigation.navigate('ReceiverRequest', { itemId: item.id })
-      : () => navigation.navigate('FundraiserDetails', { itemId: item.id });
+        ? undefined // Set to undefined to disable onPress
+        : viewRequest
+            ? () => navigation.navigate('ReceiverRequest', { itemId: item.id })
+            : () => navigation.navigate('FundraiserDetails', { itemId: item.id });
 
     const calculateDaysDifference = (dateString) => {
         const currentDate = new Date();
@@ -48,7 +51,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
         return differenceInDays;
     };
-    
+
 
     const formatDaysDifference = (days) => {
         if (days === 0) {
@@ -60,10 +63,15 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
         }
     };
 
+    const dateObject = new Date(item.created_at);
 
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+    // console.log('datasasas',dateObject.toLocaleDateString('en-GB'));
     return (
-<View>
-{/* view request
+        <View>
+            {/* view request
  {viewRequest ?  <Button
         title="Save"
         filled
@@ -74,7 +82,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
           marginBottom: 40,
         }}
       />: null} */}
-       
+
             <Pressable style={[
                 styles.cardItem,
                 searchView ?
@@ -113,7 +121,8 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                             width: savedView ? 320 : 230,
                             height: 130
                         }
-                        ]} source={item.image}>
+                        ]} source={item.image_1 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_1 } : require('../../assets/images/images.jpg')}
+                        >
                             {searchView ? null : <View style={styles.textBackground}>
                                 <Text style={styles.cardItemName(COLORS.white, 0, SIZES.medium - 1,)}>{item?.category}</Text>
                             </View>}
@@ -193,12 +202,37 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
 
 
                     <View
-                        // style={styles.cardDetails}  320
+
                         style={[searchView ? (showOrganiserInfo ? styles.cardImageWithOrganiserInfo : { width: 110, height: 120 }) : {
                             width: savedView ? "100%" : 230,
                             height: 105
                         }, styles.cardDetails]}
                     >
+                        {viewRequest ?
+                            <TouchableOpacity style={{ position: 'absolute', top: 0, right: 0, padding: 10, backgroundColor: 'red' }} activeOpacity={0.7}>
+                                <MaterialCommunityIcons
+                                    name='dots-vertical'
+                                    size={22}
+                                    color={COLORS.primary}
+                                />
+                            </TouchableOpacity>
+                            : null
+                        }
+
+                        <Modal isVisible={isModalVisible} style={styles.modal} onBackdropPress={toggleModal}>
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity style={styles.modalButton}>
+                                    <Text style={styles.textStyle}>Mark as donated</Text>
+                                </TouchableOpacity>
+                                {/* <TouchableOpacity style={styles.modalButton} >
+                                    <Text style={styles.textStyle}>Deactivate</Text>
+                                </TouchableOpacity> */}
+                                <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+                                    <Text style={styles.textStyle}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
+
 
                         <Text style={styles.cardItemName(COLORS.black, SIZES.xSmall - 7, SIZES.medium - 1,)} numberOfLines={1} ellipsizeMode="tail">{item?.title}</Text>
                         {showDonationInfo && (
@@ -215,7 +249,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                                                 <>
                                                     <Text>{formatDaysDifference(calculateDaysDifference(item?.created_at))}</Text>
                                                 </>) :
-                                            (<Text style={styles.greyText}>13/01/2024</Text>)
+                                            (<Text style={styles.greyText}>{dateObject.toLocaleDateString('en-GB')}</Text>)
                                         }
 
                                     </Text>
@@ -234,7 +268,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                 </View>
 
             </Pressable>
-            </View>   
+        </View>
     );
 };
 

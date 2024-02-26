@@ -95,7 +95,7 @@ const Saved = () => {
                ref={searchInputRef} // Assign the ref to the TextInput
                 style={styles.searchInput}
                 placeholderTextColor={'grey'}
-                placeholder="Search campaign"
+                placeholder="Search item"
                 value={searchText}
                 onChangeText={(text) =>{
                   // onSearch(text)

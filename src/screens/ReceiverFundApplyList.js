@@ -22,33 +22,22 @@ import { categories } from '../components/Data';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const MyAds = ({ route }) => {
+const ReceiverFundApplyList = ({ route }) => {
   const [searchBarFocused, setSearchBarFocused] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [filteredList, setFilteredList] = useState([]);
   const [id, setid] = useState();
   const [alldata, setalldata] = useState({});
-  const [categoryData, setCategoryData] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
-  //   const { categoryName } = route.params;
-  const { categoryName } = 'education';
+  const [fundIds, setFundIds] = useState([]);  
+  const [allFundDetails, setallFundDetails] = useState({});
+
+
 
 
   useEffect(() => {
     getLoginDataFromStorage();
   }, []);
-
-  // useEffect(() => {
-  //   if (categoryName) {
-  //     fetchDataForCategory(categoryName);
-  //   } else {
-  //     getdata(id);
-  //   }
-  // }, [categoryName]);
-
-  useEffect(() => {
-    fetchDataForCategory(categoryName);
-  }, [categoryName]);
 
   const getLoginDataFromStorage = async () => {
     try {
@@ -73,8 +62,10 @@ const MyAds = ({ route }) => {
 
   const getdata = async (id) => {
     try {
-      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/fund-list/${id}`);
+      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/receiver-applied-list/${id}`);
 
+      console.log('receiverdata', response.data.data.map(item => item.fund.id));
+      setFundIds(response.data.data.map(item => item.fund.id))
       const sortedData = response.data.data.sort((a, b) => {
         // Assuming your data has a property named createdAt or updatedAt
         const dateA = new Date(a.created_at || a.updated_at);
@@ -92,16 +83,37 @@ const MyAds = ({ route }) => {
     }
   };
 
+//   const fundIds = [7, 7, 1, 1, 1, 1, 1];
 
-  const fetchDataForCategory = async (selectedCategory) => {
-    try {
-      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/front-fund-category/${selectedCategory}`);
-      setCategoryData(response.data.data);
-      // console.log(response.data.data)
-    } catch (error) {
-      console.error(`Error fetching ${selectedCategory} data:`, error.response.data);
-    }
-  };
+const fetchFundDetails = async (fundId) => {
+  try {
+    const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-fund/${fundId}`);
+    return response.data; // Assuming the detailed fund data is in response.data
+  } catch (error) {
+    console.error(`Error fetching details for fund ID ${fundId}:`, error);
+    return null;
+  }
+};
+
+const fetchDataForAllFunds = async () => {
+  const fundDetailsPromises = fundIds.map((fundId) => fetchFundDetails(fundId));
+  
+  try {
+    // setallFundDetails()
+    const allFundDetails = await Promise.all(fundDetailsPromises);
+  
+    const fundData = allFundDetails.map(fundDetail => fundDetail.data);
+    console.log('All fund details:', fundData);
+    // Now you have an array containing detailed information for each fund ID
+    // You can use this array to render your UI or perform further operations
+  } catch (error) {
+    console.error('Error fetching fund details:', error);
+  }
+};
+
+// Call the function to initiate the process
+fetchDataForAllFunds();
+
 
   useEffect(() => {
     filterData();
@@ -162,7 +174,7 @@ const MyAds = ({ route }) => {
     <SafeAreaView style={{ backgroundColor: COLORS.white }}>
       <View style={{ marginHorizontal: SIZES.small - 6 }}>
         <Header
-          title="My Ads"
+          title="Fund list You applied"
           showBackButton
           showFilterButton
         />
@@ -224,7 +236,7 @@ const MyAds = ({ route }) => {
           </Pressable>
 
           <View>
-            <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={filteredList} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} viewRequest={true} />
+            <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={allFundDetails} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} viewRequest={true} />
 
           </View>
 
@@ -235,4 +247,4 @@ const MyAds = ({ route }) => {
   );
 };
 
-export default MyAds;
+export default ReceiverFundApplyList;

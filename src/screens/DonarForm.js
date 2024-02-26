@@ -85,8 +85,6 @@ export default function DonarForm() {
         }
     };
 
-    console.log('me', id)
-
     const toggleModal = () => {
         if (!image_1) {
             setModalVisible1(!isModalVisible1);
@@ -292,17 +290,17 @@ export default function DonarForm() {
             formData.append('description', description);
             formData.append('terms_accept', isChecked ? 'yes' : 'no');
             formData.append('user_id', id);
-            formData.append('salary_slip', {
+            formData.append('image_1', {
                 uri: image_1.imagePath,
                 type: image_1.imageType,
                 name: image_1.imageName,
             });
-            formData.append('salary_slip', {
+            formData.append('image_2', {
                 uri: image_2.imagePath,
                 type: image_2.imageType,
                 name: image_2.imageName,
             });
-            formData.append('salary_slip', {
+            formData.append('image_3', {
                 uri: image_3.imagePath,
                 type: image_3.imageType,
                 name: image_3.imageName,
@@ -663,7 +661,7 @@ export default function DonarForm() {
                                             }}
                                         />
                                     </View>
-                                    <Text style={styles.boxText(SIZES.xLarge - 2)}>Create Successfully!</Text>
+                                    <Text style={[styles.boxText(SIZES.xLarge - 2),{textAlign:'center'}]}>Your Ad has been uploaded Successfully!</Text>
                                     <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are currently reviewing a fundraising proposal for your donation. We will tell you the result soon.</Text>
                                     <Button
                                         onPress={closeModal} // Ensure this calls the submit function for navigation

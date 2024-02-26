@@ -14,10 +14,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import COLORS from '../../constants/Colors';
+import ReceiverFundApplyList from './ReceiverFundApplyList'
 import { moneyIcon } from '../components/Data';
 import Inbox from './Inbox';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -177,18 +179,17 @@ const BottomNavigation = () => {
       />
 
       <Tab.Screen
-        name="MyAds"
-        component={MyAds}
+        name="ReceiverFundApplyList"
+        component={ReceiverFundApplyList}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
               <View style={{ alignItems: "center", justifyContent: "center" }}>
-                {/* <FontAwesome5 name="donate" size={24} color={focused ? COLORS.primary : COLORS.grey} /> */}
                 <Image
                   style={{ width: 30, height: 26, resizeMode: "contain", tintColor: focused ? COLORS.primary : COLORS.grey }}
-                  source={moneyIcon.price}
+                  source={require('../../assets/images/adwords1.png')}
                 />
-                <Text style={{ fontSize: 12, color: focused ? COLORS.primary : COLORS.grey, fontFamily: 'Roboto-Medium' }}>Donation</Text>
+                <Text style={{ fontSize: 12, color: focused ? COLORS.primary : COLORS.grey, fontFamily: 'Roboto-Medium' }}>My Ads</Text>
               </View>
             )
           }
