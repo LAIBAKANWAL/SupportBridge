@@ -24,21 +24,43 @@ const ReceiverRequest = ({ route }) => {
     const [alldata, setalldata] = useState([]);
     const { itemId } = route.params;
 
-    // console.log('fvf',itemId)
+    // useEffect(() => {
+    //     const getdata = async (id) => {
+    //       try {
+    //         const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-user-request/${id}`);
+    //         console.log('get fund request Successfully:', response.data);
+    //         setalldata(response.data.data);
+    //         console.log('databchc', response.data.data.name);
+    //       } catch (error) {
+    //         console.error('Error get fund request:', error.response.data);
+    //       }
+    //     };
+
+    //     if (itemId) {
+    //       getdata(itemId);
+    //     }
+    //   }, [itemId]);
+
+    // useEffect(() => {
+    //     getdata(itemId);
+    //     getDoneData(donerId);
+    // }, [itemId,donerId]);
 
     useEffect(() => {
-        getdata(itemId);
-        getDoneData(donerId);
-    }, [itemId,donerId]);
+        if (itemId) {
+            getdata(itemId)
+        }
+    }, [itemId]);
 
     const getdata = async (id) => {
         try {
             const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-user-request/${id}`);
 
             console.log('get fund request Successfully:', response.data);
-               setFundRequests(response.data.data);
+            setFundRequests(response.data.data);
             setDonerId(response.data.data.user_id)
             //    console.log('data',response.data.data.user_id)
+            getDoneData(response.data.data.user_id);
         }
         catch (error) {
             //   setLoading(false);
@@ -56,7 +78,7 @@ const ReceiverRequest = ({ route }) => {
             setCnic(response.data.data.cnic_number)
             setTime(response.data.data.created_at)
             setProfile("https://app-api.demo-customwebsites.com/" + response.data.data.profile_image)
-            console.log('profile',response.data.data)
+            console.log('profile', response.data.data)
         }
         catch (error) {
             //   setLoading(false);
@@ -72,7 +94,7 @@ const ReceiverRequest = ({ route }) => {
         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
         return differenceInDays;
     };
-    
+
 
     const formatDaysDifference = (days) => {
         if (days === 0) {
@@ -157,40 +179,40 @@ const ReceiverRequest = ({ route }) => {
                     renderItem={renderItem}
                 /> */}
 
-<View style={styles.notificationItem}>
-            <Pressable
-                style={{
-                    flexDirection: "row",
-                    marginBottom: 15,
-                    marginTop: 15,
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
-                    <Image
-                        style={{ width: 60, height: 60, resizeMode: 'cover' }}
-                        source={profile ? { uri: profile } : require("../../assets/images/placeholder.png")}
-                    />
+                <View style={styles.notificationItem}>
+                    <Pressable
+                        style={{
+                            flexDirection: "row",
+                            marginBottom: 15,
+                            marginTop: 15,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
+                            <Image
+                                style={{ width: 60, height: 60, resizeMode: 'cover' }}
+                                source={profile ? { uri: profile } : require("../../assets/images/placeholder.png")}
+                            />
+
+                        </View>
+
+                        <View style={{ marginLeft: 10, flex: 1 }}>
+                            <Text style={styles.notificationTitle}>{name} ({cnic})</Text>
+                            {/* <Text style={styles.notificationMessage}>{item.category}</Text> */}
+                            <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{formatDaysDifference(calculateDaysDifference(time))}</Text>
+                        </View>
+                        <Button
+                            onPress={() => navigation.navigate("RequestInfo", { itemId: itemId })}
+                            title="Details"
+                            filled={true}
+                            width='30%'
+                        />
+
+                    </Pressable>
+
 
                 </View>
-
-                <View style={{ marginLeft: 10, flex: 1 }}>
-                    <Text style={styles.notificationTitle}>{name} ({cnic})</Text>
-                    {/* <Text style={styles.notificationMessage}>{item.category}</Text> */}
-                    <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{formatDaysDifference(calculateDaysDifference(time))}</Text>
-                </View>
-                <Button
-                    onPress={() => navigation.navigate("RequestInfo", { itemId: itemId })}
-                    title="Details"
-                    filled={true}
-                    width='30%'
-                />
-
-            </Pressable>
-
-
-        </View>
 
 
 

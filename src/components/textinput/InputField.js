@@ -9,7 +9,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../../constants/Colors';
 
-const InputField = ({ placeholder, keyboardType, secureTextEntry, isPassword, value, onChange, iconComponent, multiline, numberOfLines, fontsize, error, onFocus = () => { }, ...props }) => {
+const InputField = ({ placeholder, keyboardType, secureTextEntry, isPassword, value, onChange, iconComponent, multiline, numberOfLines, fontsize, error, onFocus = () => { },editable = true, ...props }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -31,6 +31,7 @@ const InputField = ({ placeholder, keyboardType, secureTextEntry, isPassword, va
           multiline={multiline}
           numberOfLines={numberOfLines}
           autoCorrect={false}
+          editable={editable}
           onFocus={() => {
             onFocus();
             setIsFocused(true);
