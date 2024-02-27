@@ -38,6 +38,19 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
         }
     };
 
+    const imagedata = [
+        {
+          image: item.image_1 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_1 } : require('../../assets/images/images.jpg'),
+        },
+        {
+          image: item.image_2 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_2 } : require('../../assets/images/images.jpg'),
+        },
+        {
+          image: item.image_3 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_3 } : require('../../assets/images/images.jpg'),
+        },
+      ];
+      
+      
     const onPressHandler = disablePress
         ? undefined // Set to undefined to disable onPress
         : viewRequest
@@ -68,20 +81,9 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
-    // console.log('datasasas',dateObject.toLocaleDateString('en-GB'));
+
     return (
         <View>
-            {/* view request
- {viewRequest ?  <Button
-        title="Save"
-        filled
-        // onPress={validate}
-        // onPress={() => navigation.navigate('ReceiverRequest', { itemId: item.id })}
-        style={{
-          marginTop: 20,
-          marginBottom: 40,
-        }}
-      />: null} */}
 
             <Pressable style={[
                 styles.cardItem,
@@ -90,10 +92,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
 
                     (imageView ? (profileView ? { marginTop: 10, marginRight: 10 } : { margin: 10 }) : null)
 
-                // (imageView? 
-                //     {margin: 10}: null)
             ]}
-                // onPress={onPressHandler}
                 onPress={imageView ? onPressHandler : undefined}
                 disabled={!imageView}
             >
@@ -129,73 +128,79 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                         </ImageBackground>
                         )
                         :
-                        // (<View>
-                        //     <FlatList
+                        // <View>
+                        //     <ScrollView
                         //         horizontal
+                        //         pagingEnabled
                         //         showsHorizontalScrollIndicator={false}
+                        //         onScroll={handleScroll}
+                        //         scrollEventThrottle={0}
                         //         snapToInterval={Screen_width}
                         //         snapToAlignment='center'
                         //         decelerationRate={'fast'}
-                        //         pagingEnabled
-                        //         onScroll={handleScroll}
-                        //         scrollEventThrottle={0}
-                        //        data={imageGallery}
-                        //         keyExtractor={item => item.id}
-                        //         renderItem={({ item }) => {
-                        //             if (!item.uri) return <View style={{ width: 0 }} />
-                        //             return (
-                        //                 <View style={{ width: Screen_width, justifyContent: 'center', alignItems: 'center' }}>
-                        //                     <Image source={{ uri: item.uri }} style={styles.imageGallery(Screen_width - 140)} />
-                        //                     <View style={styles.imageText}>
-                        //                         <Ionicons name="camera-outline" size={17} color={COLORS.white} />
-                        //                         {/* <Text style={{ paddingLeft: 5, }}>{`${currentIndex + 1}/${data.length}`}</Text> */}
-                        //                         <Text style={{ paddingLeft: 5, }}>{`${currentIndex + 1}/${data ? data.length : 0}`}</Text>
+                        //     >
+                        //         <View style={{ width: Screen_width, justifyContent: 'center', alignItems: 'center' }}>
+                        //             <Image
+                        //                 style={styles.imageGallery(Screen_width - 140)}
+                        //                 source={item.image_1 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_1 } : require('../../assets/images/images.jpg')}
+                        //             />
+                        //             <View style={styles.imageText}>
+                        //                 <Ionicons name="camera-outline" size={17} color={COLORS.white} />
+                        //                 <Text style={{ paddingLeft: 5, }}>{`${currentIndex + 1}/${data ? data.length : 0}`}</Text>
 
-                        //                     </View>
-                        //                 </View>
+                        //             </View>
+                        //         </View>
+                        //         <View style={{ width: Screen_width, justifyContent: 'center', alignItems: 'center' }}>
+                        //             <Image
+                        //                 style={styles.imageGallery(Screen_width - 140)}
+                        //                 source={item.image_2 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_2 } : require('../../assets/images/images.jpg')}
+                        //             />
+                        //             <View style={styles.imageText}>
+                        //                 <Ionicons name="camera-outline" size={17} color={COLORS.white} />
+                        //                 <Text style={{ paddingLeft: 5, }}>{`${currentIndex + 1}/${data ? data.length : 0}`}</Text>
 
-                        //             )
-                        //         }}
-                        //     />
+                        //             </View>
+                        //         </View>
+                        //         <View style={{ width: Screen_width, justifyContent: 'center', alignItems: 'center' }}>
+                        //             <Image
+                        //                 style={styles.imageGallery(Screen_width - 140)}
+                        //                 source={item.image_3 ? { uri: "https://app-api.demo-customwebsites.com/" + item.image_3 } : require('../../assets/images/images.jpg')}
+                        //             />
+                        //             <View style={styles.imageText}>
+                        //                 <Ionicons name="camera-outline" size={17} color={COLORS.white} />
+                        //                 <Text style={{ paddingLeft: 5, }}>{`${currentIndex + 1}/${data ? data.length : 0}`}</Text>
 
+                        //             </View>
+                        //         </View>
+                        //     </ScrollView>
                         // </View>
-                        // )
-                        (<View>
-                            <FlatList
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                snapToInterval={Screen_width}
-                                snapToAlignment='center'
-                                decelerationRate={'fast'}
-                                pagingEnabled
-                                onScroll={handleScroll}
-                                scrollEventThrottle={0}
-                                data={data} // Use the data array directly
-                                keyExtractor={item => item.id.toString()} // Ensure the key is a string
-                                renderItem={({ item }) => {
-                                    const images = [
-                                        item.image_1,
-                                        item.image_2,
-                                        item.image_3,
-                                        item.image_4,
-                                        item.image_5
-                                    ];
 
-                                    return (
-                                        <View style={{ width: Screen_width, justifyContent: 'center', alignItems: 'center' }}>
-                                            {images.map((image, index) => (
-                                                <Image key={index} source={{ uri: image }} style={styles.imageGallery(Screen_width - 140)} />
-                                            ))}
-                                            <View style={styles.imageText}>
-                                                <Ionicons name="camera-outline" size={17} color={COLORS.white} />
-                                                <Text style={{ paddingLeft: 5, }}>{`${currentIndex + 1}/${images.length}`}</Text>
-                                            </View>
-                                        </View>
-                                    );
-                                }}
-                            />
+                        <View>
+                        <ScrollView
+                          horizontal
+                          pagingEnabled
+                          showsHorizontalScrollIndicator={false}
+                          onScroll={handleScroll}
+                          scrollEventThrottle={0}
+                          snapToInterval={Screen_width}
+                          snapToAlignment='center'
+                          decelerationRate={'fast'}
+                        >
+                          {imagedata.map((item, index) => (
+                            <View key={index} style={{ width: Screen_width, justifyContent: 'center', alignItems: 'center' }}>
+                              <Image
+                                style={styles.imageGallery(Screen_width - 140)}
+                                source={item.image}
+                              />
+                              <View style={styles.imageText}>
+                                <Ionicons name="camera-outline" size={17} color={COLORS.white} />
+                                <Text style={{ paddingLeft: 5 }}>{`${index + 1}/${imagedata.length}`}</Text>
+                              </View>
+                            </View>
+                          ))}
+                        </ScrollView>
+                      </View>
 
-                        </View>)
                     }
 
 

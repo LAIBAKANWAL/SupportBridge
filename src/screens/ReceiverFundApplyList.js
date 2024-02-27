@@ -1,250 +1,220 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  SafeAreaView,
-  Easing,
-  Keyboard,
-  Pressable, ScrollView, Image
-} from 'react-native';
-import COLORS from '../../constants/Colors';
-import SIZES from '../../constants/Sizes';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fonts from '../../constants/Fonts';
-import styles from './search.styles';
-import * as Animatable from 'react-native-animatable';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList, SafeAreaView, Pressable, Image, Modal, Alert, ImageBackground } from 'react-native';
 import Header from '../components/Header';
-import Card from '../components/home/Card';
-import { list } from '../components/Data';
-import { categories } from '../components/Data';
+import SIZES from '../../constants/Sizes';
+import COLORS from '../../constants/Colors';
+import { useNavigation } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import styles from '../components/carditem.style';
+import Button from '../components/Button';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ReceiverFundApplyList = ({ route }) => {
-  const [searchBarFocused, setSearchBarFocused] = useState(true);
-  const [searchText, setSearchText] = useState('');
-  const [filteredList, setFilteredList] = useState([]);
-  const [id, setid] = useState();
-  const [alldata, setalldata] = useState({});
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [fundIds, setFundIds] = useState([]);  
-  const [allFundDetails, setallFundDetails] = useState({});
+    const navigation = useNavigation();
+    const [id, setId] = useState()
+    const [alldata, setalldata] = useState([]);
 
+    useEffect(() => {
+        getLoginDataFromStorage();
+    }, []);
 
+    const getLoginDataFromStorage = async () => {
+        try {
+            const storedUserData = await AsyncStorage.getItem('user_data');
+            if (storedUserData) {
 
+                const userData = JSON.parse(storedUserData);
+                // console.log('Retrieved login data from AsyncStorage:', userData);
+                setId(userData.id);
+                getdata(userData.id)
+                return userData;
 
-  useEffect(() => {
-    getLoginDataFromStorage();
-  }, []);
-
-  const getLoginDataFromStorage = async () => {
-    try {
-      const storedUserData = await AsyncStorage.getItem('user_data');
-      if (storedUserData) {
-
-        const userData = JSON.parse(storedUserData);
-
-        setid(userData.id);
-        getdata(userData.id)
-        return userData;
-
-      } else {
-        console.log('No login data found in AsyncStorage.');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error retrieving login data from AsyncStorage:', error);
-      return null;
-    }
-  };
-
-  const getdata = async (id) => {
-    try {
-      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/receiver-applied-list/${id}`);
-
-      console.log('receiverdata', response.data.data.map(item => item.fund.id));
-      setFundIds(response.data.data.map(item => item.fund.id))
-      const sortedData = response.data.data.sort((a, b) => {
-        // Assuming your data has a property named createdAt or updatedAt
-        const dateA = new Date(a.created_at || a.updated_at);
-        const dateB = new Date(b.created_at || b.updated_at);
-
-        // Sort in descending order (latest first)
-        return dateB - dateA;
-      });
-
-
-      setalldata(sortedData)
-
-    } catch (error) {
-      console.error('Error fetching data:', error.response.data);
-    }
-  };
-
-//   const fundIds = [7, 7, 1, 1, 1, 1, 1];
-
-const fetchFundDetails = async (fundId) => {
-  try {
-    const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-fund/${fundId}`);
-    return response.data; // Assuming the detailed fund data is in response.data
-  } catch (error) {
-    console.error(`Error fetching details for fund ID ${fundId}:`, error);
-    return null;
-  }
-};
-
-const fetchDataForAllFunds = async () => {
-  const fundDetailsPromises = fundIds.map((fundId) => fetchFundDetails(fundId));
-  
-  try {
-    // setallFundDetails()
-    const allFundDetails = await Promise.all(fundDetailsPromises);
-  
-    const fundData = allFundDetails.map(fundDetail => fundDetail.data);
-    console.log('All fund details:', fundData);
-    // Now you have an array containing detailed information for each fund ID
-    // You can use this array to render your UI or perform further operations
-  } catch (error) {
-    console.error('Error fetching fund details:', error);
-  }
-};
-
-// Call the function to initiate the process
-fetchDataForAllFunds();
-
-
-  useEffect(() => {
-    filterData();
-  }, [searchText, alldata]); // Update filteredList when searchText or categoryData changes
-
-  const filterData = () => {
-    if (searchText) {
-      setFilteredList(
-        alldata.filter(item =>
-          item.title.toLowerCase().includes(searchText.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredList(alldata); // Show all data when searchText is empty
-    }
-  };
-
-
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-
-
-    // Clean up event listeners when the component unmounts
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+            } else {
+                console.log('No login data found in AsyncStorage.');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error retrieving login data from AsyncStorage:', error);
+            return null;
+        }
     };
-  }, []);
-
-  const keyboardDidShow = () => {
-    setSearchBarFocused(true);
-  };
-
-  const keyboardDidHide = () => {
-    setSearchBarFocused(false);
-  };
 
 
 
-  // Create a ref for the search input
-  const searchInputRef = useRef(null);
+    const getdata = async (id) => {
+        try {
+            const response = await axios.get(`https://app-api.demo-customwebsites.com/api/receiver-applied-list/${id}`);
 
-  // Function to unfocus the search bar
-  const unfocusSearchBar = () => {
-    if (searchInputRef.current) {
-      searchInputRef.current.blur();
-    }
-  };
+            console.log('get fund apply Successfully:', response.data);
+            setalldata(response.data.data);
+        }
+        catch (error) {
+            //   setLoading(false);
+            console.error('Error get fund request:', error.response.data);
 
-  const handleCloseBtnPress = () => {
-    setSearchText('');
-    unfocusSearchBar();
-  };
+        }
+    };
 
-  return (
-    <SafeAreaView style={{ backgroundColor: COLORS.white }}>
-      <View style={{ marginHorizontal: SIZES.small - 6 }}>
-        <Header
-          title="Fund list You applied"
-          showBackButton
-          showFilterButton
-        />
-        <ScrollView showsHorizontalScrollIndicator={false} style={{ marginBottom: 160 }}>
+    const userObjects = alldata.map(item => item.fund);
+    console.log('sdfsdgf',userObjects)
 
-          <Pressable>
-            <View style={{ flexDirection: 'row' }}>
+    const calculateDaysDifference = (dateString) => {
+        const currentDate = new Date();
+        const targetDate = new Date(dateString);
+        const differenceInMilliseconds = currentDate - targetDate;
+        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+        return differenceInDays;
+    };
 
-              <Animatable.View
-                animation="slideInRight"
-                duration={500}
-                easing={Easing.linear}
-                style={[
-                  styles.searchContainer,
-                  { width: searchBarFocused ? '80%' : '96%' },
-                ]}
-              >
+    const formatDaysDifference = (days) => {
+        if (days === 0) {
+            return <Text style={styles.greyText}>Today</Text>;
+        } else if (days === 1) {
+            return <Text style={styles.primaryText}>1 <Text style={styles.greyText}>day ago</Text></Text>;
+        } else {
+            return <Text style={styles.primaryText}>{days} <Text style={styles.greyText}>days ago</Text></Text>;
+        }
+    };
 
-                <View style={styles.searchWrapper}>
-                  <TextInput
-                    ref={searchInputRef} // Assign the ref to the TextInput
-                    style={styles.searchInput}
-                    placeholderTextColor={'grey'}
-                    placeholder="Search item"
-                    value={searchText}
-                    onChangeText={(text) => {
-                      // onSearch(text)
-                      setSearchText(text)
-                    }}
-                  // onFocus={handleSearchBarFocus}
-                  />
-                </View>
 
-                <View
-                  style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, height: 35, marginTop: 5 }}
-                ></View>
-                <TouchableOpacity
-                  style={styles.voiceSearch}
-                >
-                  <Ionicons name="mic-outline" size={24} color={COLORS.grey} />
-                </TouchableOpacity>
+    const accountRemove = () => {
+        Alert.alert('Are you sure to delete?', '',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Delete',
+                    onPress: () => {
+                        // Add your delete account logic here
+                        console.log('Account deleted!');
+                    },
+                },
+            ],
+            { cancelable: false });
 
-              </Animatable.View >
+    };
 
-              <View style={styles.closeContainer}>
-                <Animatable.View animation="fadeIn" duration={500} easing="ease-in-out">
+    return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
 
-                  <TouchableOpacity
-                    style={styles.closeBtn}
-                    onPress={handleCloseBtnPress}
-                  >
-                    <Text style={{ color: COLORS.grey, fontFamily: Fonts.bold }}>Cancel</Text>
-                  </TouchableOpacity>
-                </Animatable.View>
-              </View>
+            <View>
+
+                <Header
+                    title="Applied Fund List"
+                    showBackButton
+                />
+
+                {userObjects.map((fund, index) => (
+
+                    <Pressable key={index} style={[
+                        styles.cardItem, { height: 105, margin: 5 }
+                    ]}
+                        onPress={() => navigation.navigate('FundraiserDetails', { itemId: fund.id })}
+                    >
+
+                        <View style={{ flexDirection: 'row' }}>
+                        
+                                <View style={[styles.savedIconBackground,{ top: 5, left: 75, }]}>
+                                    <Ionicons name="heart" size={22} color={COLORS.primary} />
+                                </View>
+                   
+
+
+
+                            <ImageBackground style={{ width: 110, height: 120 }} source={fund.image_1 ? { uri: "https://app-api.demo-customwebsites.com/" + fund.image_1 } : require('../../assets/images/images.jpg')}
+                            >
+                            </ImageBackground>
+
+
+                            <View
+
+                                style={[{ width: 110, height: 120 }, styles.cardDetails]}
+                            >
+                                <Text style={styles.cardItemName(COLORS.black, SIZES.xSmall - 7, SIZES.medium - 1,)} numberOfLines={1} ellipsizeMode="tail">{fund?.title}</Text>
+    
+                                    <View>
+                                        <Text style={styles.cardDonationText(COLORS.grey, SIZES.small)} numberOfLines={2} ellipsizeMode="tail">{fund?.description}</Text>
+
+                                        <View style={styles.cardDonationContainer}>
+                                            <Text style={styles.cardDonationText(COLORS.primary, SIZES.small)}>
+                                                {fund?.is_active === '1' ? 'Available' : 'Donated'}
+                                            </Text>
+                                            <Text style={styles.cardDonationText(COLORS.primary, SIZES.small)}>
+                                                <Text>{formatDaysDifference(calculateDaysDifference(fund?.created_at))}</Text>
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                               
+                            </View>
+
+                        </View>
+
+                    </Pressable>
+
+
+                ))}
+
+
 
 
             </View>
-          </Pressable>
-
-          <View>
-            <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={allFundDetails} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} viewRequest={true} />
-
-          </View>
-
-        </ScrollView>
-      </View>
-    </SafeAreaView>
-
-  );
+        </SafeAreaView>
+    );
 };
 
+
+
 export default ReceiverFundApplyList;
+
+{/* <Pressable key={index} style={[
+    styles.cardItem, { height: 105, margin: 5 }
+]}
+    // onPress={() => navigation.navigate('FundraiserDetails', { itemId: fund.id })}
+>
+
+    <View style={{ flexDirection: 'row' }}>
+    
+            <View style={[styles.savedIconBackground,{ top: 5, left: 75, }]}>
+                <Ionicons name="heart" size={22} color={COLORS.primary} />
+            </View>
+
+
+
+
+        <ImageBackground style={{ width: 110, height: 120 }} source={fund.image_1 ? { uri: "https://app-api.demo-customwebsites.com/" + fund.image_1 } : require('../../assets/images/images.jpg')}
+        >
+            <View style={styles.textBackground}>
+                <Text style={styles.cardItemName(COLORS.white, 0, SIZES.medium - 1,)}>{fund?.category}</Text>
+            </View>
+        </ImageBackground>
+
+
+        <View
+
+            style={[{ width: 110, height: 120 }, styles.cardDetails]}
+        >
+            <Text style={styles.cardItemName(COLORS.black, SIZES.xSmall - 7, SIZES.medium - 1,)} numberOfLines={1} ellipsizeMode="tail">{fund?.title}</Text>
+
+                <View>
+                    <Text style={styles.cardDonationText(COLORS.grey, SIZES.small)} numberOfLines={2} ellipsizeMode="tail">{fund?.description}</Text>
+
+                    <View style={styles.cardDonationContainer}>
+                        <Text style={styles.cardDonationText(COLORS.primary, SIZES.small)}>
+                            {fund?.is_active === '1' ? 'Available' : 'Donated'}
+                        </Text>
+                        <Text style={styles.cardDonationText(COLORS.primary, SIZES.small)}>
+                            <Text>{formatDaysDifference(calculateDaysDifference(fund?.created_at))}</Text>
+                        </Text>
+                    </View>
+                </View>
+
+           
+        </View>
+
+    </View>
+
+</Pressable> */}

@@ -18,8 +18,8 @@ export default function Login() {
     const [isChecked, setIsChecked] = useState(false);
     
     const [inputs, setInputs] = useState({
-        cnic: "00000-0000000-0",
-        password: "1234567q",
+        cnic: "42401-0000000-0",
+        password: "12345678",
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -71,8 +71,10 @@ export default function Login() {
                 await saveLoginDataToStorage(response.data.data);
                 // await saveLoginDataToStorage(response.data.data.name);
                 // console.log(response.data.data);
-                navigation.navigate("EditProfileScreen");
-
+                // (response.data.data.cnic_number.toLowerCase() === "42401-0000000-0") ?
+                // navigation.navigate("Admin"):
+                // navigation.navigate("EditProfileScreen");
+                navigation.navigate("Admin")
             } else {
                 setLoading(false);
                 console.error('Login is failed:', response.data.message);

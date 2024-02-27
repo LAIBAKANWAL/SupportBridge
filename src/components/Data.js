@@ -120,7 +120,6 @@ const IMAGES = {
   price : require('../../assets/images/rupee.png'),
   priceIcon : require('../../assets/images/rupeeIcon.png'),
  }
-
  const imageGallery = [
   {
     id: '0',

@@ -54,9 +54,9 @@ const Header = ({ title, showBackButton, backButtonIcon, showFilterButton, filte
   const handleSharePress = () => {
 
     const options = {
-      message: "Check out this ",
-      url: 'https://www.google.com.pk/Y',
-      subject: "cbcbcvncvv bvcv cvn"
+      message: "Check out this",
+      url: 'https://app-api.demo-customwebsites.com',
+      // subject: "cbcbcvncvv bvcv cvn"
     }
     Share.open(options)
       .then(res => console.log(res))

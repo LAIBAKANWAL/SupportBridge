@@ -37,6 +37,8 @@ import CategoryList from './src/screens/CategoryList';
 import FundRequest from './src/screens/FundRequest';
 import MyAds from './src/screens/MyAds';
 import ReceiverFundApplyList from './src/screens/ReceiverFundApplyList';
+import Admin from './src/screens/Admin';
+import AdminReceiverRequest from './src/screens/AdminReceiverRequest'
 
 export{
     Signup,
@@ -67,5 +69,7 @@ export{
     CategoryList,
     FundRequest,
     MyAds,
-    ReceiverFundApplyList
+    ReceiverFundApplyList,
+    Admin,
+    AdminReceiverRequest
 }

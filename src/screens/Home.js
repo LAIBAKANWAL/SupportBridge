@@ -186,8 +186,8 @@ const Home = () => {
           ) : null}
 
 
-          {humanityData.length > 0 ? (
-            <Card horizontal={true} titleText="Humaninty" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={humanityData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
+          {medicalData.length > 0 ? (
+            <Card horizontal={true} titleText="Medical" seeAllText="See All" hideContainer={false} showHeartIcon={true} list={medicalData.slice(0, 3)} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={false} />
           ) : null}
 
           {socialData.length > 0 ? (

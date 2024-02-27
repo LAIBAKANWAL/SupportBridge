@@ -5,17 +5,17 @@ import COLORS from '../../constants/Colors';
 import SIZES from '../../constants/Sizes';
 import Fonts from '../../constants/Fonts';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Admin = () => {
   const navigation = useNavigation();
 
   const boxes = [
     { id: 1, color: '#e4fcca', icon: require('../../assets/images/category.png'), label: 'Categories', count: 6 ,   screen: 'Categories',},
-    { id: 2, color: '#f7dcdf', icon: require('../../assets/images/bullet-list.png'), label: 'Items', count: 10 ,screen: 'Items',},
+    { id: 2, color: '#f7dcdf', icon: require('../../assets/images/bullet-list.png'), label: 'Funds', count: 10 ,screen: 'Items',},
     { id: 3, color: '#fae3ac', icon: require('../../assets/images/group.png'), label: 'Users', count: 20, screen: 'Users', },
-    { id: 4, color: '#dce9fa', icon: require('../../assets/images/request.png'), label: 'Receiver Request', count: 10,screen: 'ReceiverRequest', },
-    { id: 5, color: '#dce9fa', icon: require('../../assets/images/request.png'), label: 'fund Request', count: 15,screen: 'FundRequest'},
-    // Add more boxes as needed
+    { id: 4, color: '#dce9fa', icon: require('../../assets/images/request.png'), label: 'Receiver Request', count: 10,screen: 'AdminReceiverRequest', },
   ];
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>

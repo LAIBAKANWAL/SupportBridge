@@ -28,27 +28,11 @@ const MyAds = ({ route }) => {
   const [filteredList, setFilteredList] = useState([]);
   const [id, setid] = useState();
   const [alldata, setalldata] = useState({});
-  const [categoryData, setCategoryData] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
-  //   const { categoryName } = route.params;
-  const { categoryName } = 'education';
-
 
   useEffect(() => {
     getLoginDataFromStorage();
   }, []);
 
-  // useEffect(() => {
-  //   if (categoryName) {
-  //     fetchDataForCategory(categoryName);
-  //   } else {
-  //     getdata(id);
-  //   }
-  // }, [categoryName]);
-
-  useEffect(() => {
-    fetchDataForCategory(categoryName);
-  }, [categoryName]);
 
   const getLoginDataFromStorage = async () => {
     try {
@@ -92,16 +76,6 @@ const MyAds = ({ route }) => {
     }
   };
 
-
-  const fetchDataForCategory = async (selectedCategory) => {
-    try {
-      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/front-fund-category/${selectedCategory}`);
-      setCategoryData(response.data.data);
-      // console.log(response.data.data)
-    } catch (error) {
-      console.error(`Error fetching ${selectedCategory} data:`, error.response.data);
-    }
-  };
 
   useEffect(() => {
     filterData();
@@ -227,7 +201,7 @@ const MyAds = ({ route }) => {
             <Card horizontal={false} hideContainer={true} showHeartIcon={true} list={filteredList} searchView={true} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={true} imageView={true} profileView={false} viewRequest={true} />
 
           </View>
-
+<View  style={{ marginBottom: 80}}/>
         </ScrollView>
       </View>
     </SafeAreaView>

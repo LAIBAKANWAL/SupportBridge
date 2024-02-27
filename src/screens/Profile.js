@@ -16,7 +16,9 @@ export default function Profile() {
   const navigation = useNavigation();
   const [id, setid] = useState();
   const [name, setName] = useState();
-  const [accountType, setAccountType] = useState();
+  const [profile, setProfile] = useState();
+  const [about, setAbout] = useState();
+
   const [alldata, setalldata] = useState({});
 
   useEffect(() => {
@@ -31,10 +33,11 @@ export default function Profile() {
         const userData = JSON.parse(storedUserData);
 
         setid(userData.id);
-
+        setAbout(userData.about)
         setName(userData.name);
         setAccountType(userData.user_type);
-        getdata(userData.id)
+        setProfile("https://app-api.demo-customwebsites.com/" + userData.profile_image);
+        // getdata(userData.id)
         return userData;
 
       } else {
@@ -49,29 +52,7 @@ export default function Profile() {
 
   // console.log('mere id:',id)
 
-  const getdata = async (id) => {
-    try {
-      const response = await axios.get(`https://app-api.demo-customwebsites.com/api/fund-list/${id}`);
-
-      const sortedData = response.data.data.sort((a, b) => {
-        // Assuming your data has a property named createdAt or updatedAt
-        const dateA = new Date(a.created_at || a.updated_at);
-        const dateB = new Date(b.created_at || b.updated_at);
-
-        // Sort in descending order (latest first)
-        return dateB - dateA;
-      });
-
-
-      // setalldata(response.data.data)
-      setalldata(sortedData)
-      // console.log('srteddata', sortedData)
-    } catch (error) {
-      console.error('Error fetching data:', error.response.data);
-    }
-  };
-
-console.log('alldata:',alldata)
+ 
 
   const handleBoxPress = (option) => {
     // Check if the option is already selected
@@ -99,7 +80,7 @@ console.log('alldata:',alldata)
 
         <View style={{ alignSelf: "center" }}>
           <View style={styles.profileImage}>
-            <Image source={require("../../assets/images/profile-pic.jpg")} style={styles.image} resizeMode="center"></Image>
+            <Image  style={styles.image} resizeMode="cover" source={profile ? { uri: profile } : require("../../assets/images/pic2.jpg")}></Image>
 
           </View>
           <TouchableOpacity style={styles.dm}>
@@ -112,7 +93,7 @@ console.log('alldata:',alldata)
         </View>
 
         <View style={styles.infoContainer}>
-          <Text style={[styles.text(SIZES.xLarge, COLORS.black, Fonts.medium)]}>Laiba Kanwal</Text>
+          <Text style={[styles.text(SIZES.xLarge, COLORS.black, Fonts.medium)]}>{name}</Text>
         </View>
 
         <View style={{ borderWidth: 0.7, borderColor: COLORS.lightGray, marginTop: 20, }}></View>
@@ -121,7 +102,7 @@ console.log('alldata:',alldata)
           <View>
             <Text style={styles.heading}>About</Text>
             <Text style={[styles.content, { lineHeight: 20 }]}>
-              There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration which don't look even slightly believable.
+            {about}
             </Text>
 
           </View>
@@ -200,8 +181,7 @@ console.log('alldata:',alldata)
 
           <View>
 
-            <Text style={styles.heading}>About</Text>
-          
+         
             {/* <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={alldata} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true} viewRequest={true}/>  */}
 
           </View>

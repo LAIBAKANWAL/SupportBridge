@@ -13,6 +13,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../../constants/Colors';
 import ReceiverFundApplyList from './ReceiverFundApplyList'
 import { moneyIcon } from '../components/Data';
@@ -70,6 +71,14 @@ const BottomNavigation = () => {
     }
   };
 
+  const getChangeComponent = () => {
+    if (accountType === 'donor') {
+      return MyAds;
+    } else {
+      return ReceiverFundApplyList;
+    }
+  };
+
   return (
 
     <Tab.Navigator screenOptions={screenOptions}>
@@ -88,6 +97,7 @@ const BottomNavigation = () => {
           }
         }}
       />
+      
       <Tab.Screen
         name="Saved"
         component={Saved}
@@ -165,11 +175,18 @@ const BottomNavigation = () => {
                     <MaterialCommunityIcons name="message-text-outline" size={24} color={COLORS.white} />
                   )}
                 </View>
-                <Text style={{
-                  fontSize: 14, color: focused ? COLORS.primary : COLORS.grey,
-                  position: "absolute", top: 25, fontFamily: 'Roboto-Medium'
-                }}>
-                  Create</Text>
+                {accountType === 'donor' ? (
+                     <Text style={{
+                      fontSize: 14, color: focused ? COLORS.primary : COLORS.grey,
+                      position: "absolute", top: 25, fontFamily: 'Roboto-Medium'
+                    }}>
+                      Create</Text>
+                  ) : (
+                    <Text style={{
+                      fontSize: 14, color: focused ? COLORS.primary : COLORS.grey,
+                      position: "absolute", top: 25, fontFamily: 'Roboto-Medium'
+                    }}>
+                      Connect</Text>                  )}
               </View>
             );
           },
@@ -179,17 +196,24 @@ const BottomNavigation = () => {
       />
 
       <Tab.Screen
-        name="ReceiverFundApplyList"
-        component={ReceiverFundApplyList}
+        name="List"
+        component={getChangeComponent()}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
               <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <Image
-                  style={{ width: 30, height: 26, resizeMode: "contain", tintColor: focused ? COLORS.primary : COLORS.grey }}
-                  source={require('../../assets/images/adwords1.png')}
-                />
-                <Text style={{ fontSize: 12, color: focused ? COLORS.primary : COLORS.grey, fontFamily: 'Roboto-Medium' }}>My Ads</Text>
+                  {accountType === 'donor' ? (
+                   <Image
+                   style={{ width: 30, height: 26, resizeMode: "contain", tintColor: focused ? COLORS.primary : COLORS.grey }}
+                   source={require('../../assets/images/adwords1.png')}
+                 />
+                  ) : (
+                    <FontAwesome5 name="th-list" size={24} color={focused ? COLORS.primary : COLORS.grey} />
+                    )}
+                   {accountType === 'donor' ? (
+                       <Text style={{ fontSize: 12, color: focused ? COLORS.primary : COLORS.grey, fontFamily: 'Roboto-Medium' }}>My Ads</Text>
+                  ) : (
+                    <Text style={{ fontSize: 12, color: focused ? COLORS.primary : COLORS.grey, fontFamily: 'Roboto-Medium' }}>List</Text>                )}
               </View>
             )
           }

@@ -557,8 +557,8 @@ export default function ReceiverForm({ route }) {
                                         }}
                                     />
                                 </View>
-                                <Text style={styles.boxText(SIZES.xLarge)}>Submit Successfully!</Text>
-                                <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are currently reviewing a fundraising proposal for ypur donation. We will tell you the result soon.</Text>
+                                <Text style={[styles.boxText(SIZES.xLarge),{textAlign:'center'}]}>Submit Successfully!</Text>
+                                <Text style={[styles.textStyle, { textAlign: 'center', paddingLeft: 10 }]}>We are  reviewing youe request. We will tell you the result soon.</Text>
                                 <Button
                                     onPress={closeModal}
                                     title="OK"

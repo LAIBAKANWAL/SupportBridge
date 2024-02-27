@@ -7,20 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import Button from '../components/Button';
 import axios from 'axios';
 
-const categoryData = [
-    { id: '1', name: 'Laibo', cnic: '23101-4256785-6', date: '2023-04-15 14:29:28', image: require('../../assets/images/profile-pic.jpg') },
-    { id: '2', name: 'Laibo', cnic: '23101-4256785-6', date: '2023-04-15 14:29:28', image: require('../../assets/images/profile-pic.jpg') },
-];
-
-
 const ReceiverRequest = ({ route }) => {
     const navigation = useNavigation();
-    const [fundRequests, setFundRequests] = useState({});
+    const [fundRequests, setFundRequests] = useState([]);
     const [donerId, setDonerId] = useState();
-    const [name, setName] = useState();
-    const [cnic, setCnic] = useState();
-    const [time, setTime] = useState();
-    const [profile, setProfile] = useState(null);
     const [alldata, setalldata] = useState([]);
     const { itemId } = route.params;
 
@@ -54,13 +44,13 @@ const ReceiverRequest = ({ route }) => {
 
     const getdata = async (id) => {
         try {
-            const response = await axios.get(`https://app-api.demo-customwebsites.com/api/detail-user-request/${id}`);
+            const response = await axios.get(`https://app-api.demo-customwebsites.com/api/list-fund-request/${id}`);
 
             console.log('get fund request Successfully:', response.data);
             setFundRequests(response.data.data);
             setDonerId(response.data.data.user_id)
             //    console.log('data',response.data.data.user_id)
-            getDoneData(response.data.data.user_id);
+            getDoneData(response.data.data.user);
         }
         catch (error) {
             //   setLoading(false);
@@ -68,6 +58,8 @@ const ReceiverRequest = ({ route }) => {
 
         }
     };
+
+    const userObjects = fundRequests.map(item => item.user);
 
     const getDoneData = async (id) => {
         try {
@@ -180,7 +172,9 @@ const ReceiverRequest = ({ route }) => {
                 /> */}
 
                 <View style={styles.notificationItem}>
+                {userObjects.map((user, index) => (
                     <Pressable
+                    key={index}
                         style={{
                             flexDirection: "row",
                             marginBottom: 15,
@@ -192,15 +186,15 @@ const ReceiverRequest = ({ route }) => {
                         <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
                             <Image
                                 style={{ width: 60, height: 60, resizeMode: 'cover' }}
-                                source={profile ? { uri: profile } : require("../../assets/images/placeholder.png")}
+                                source={ user.profile_image ? { uri: "https://app-api.demo-customwebsites.com/" + user.profile_image } : require('../../assets/images/images.jpg')}
                             />
 
                         </View>
 
                         <View style={{ marginLeft: 10, flex: 1 }}>
-                            <Text style={styles.notificationTitle}>{name} ({cnic})</Text>
+                            <Text style={styles.notificationTitle}>{user.name} ({user.cnic_number})</Text>
                             {/* <Text style={styles.notificationMessage}>{item.category}</Text> */}
-                            <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{formatDaysDifference(calculateDaysDifference(time))}</Text>
+                            <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{formatDaysDifference(calculateDaysDifference(user.created_at))}</Text>
                         </View>
                         <Button
                             onPress={() => navigation.navigate("RequestInfo", { itemId: itemId })}
@@ -211,7 +205,7 @@ const ReceiverRequest = ({ route }) => {
 
                     </Pressable>
 
-
+))}
                 </View>
 
 

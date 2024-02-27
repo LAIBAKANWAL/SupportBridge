@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         // margin: 5,
     //   width:'100%',
     //   height:'50%',
-        flex: 1, 
+        // flex: 1, 
         borderRadius: 10, // Add borderRadius to create a slight curve
         overflow: 'hidden', // Hide overflowing content due to borderRadius
         borderWidth:1,
@@ -176,7 +176,19 @@ imageGallery: (height)=>({
     backgroundColor: COLORS.black,
     padding: 10,
     borderRadius: 5
-  }
+  },  notificationItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+},
+notificationTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#555',
+},
+notificationMessage: {
+    fontSize: 16,
+    color: '#555',
+},
 });
 
 export default styles;
