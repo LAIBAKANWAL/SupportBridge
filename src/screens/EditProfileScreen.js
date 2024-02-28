@@ -320,6 +320,7 @@ export default function EditProfileScreen() {
               source={profile ? { uri: profile } : require("../../assets/images/placeholder.png")}
             />
           </View>
+          
 
           {/* <TouchableOpacity style={styles.dm} activeOpacity={0.7} onPress={() => navigation.navigate("Inbox")}>
             <MaterialIcons name="chat" size={15} color="#DFD8C8"></MaterialIcons>

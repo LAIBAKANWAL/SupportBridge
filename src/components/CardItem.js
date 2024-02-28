@@ -213,7 +213,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                             height: 105
                         }, styles.cardDetails]}
                     >
-                        {viewRequest ?
+                        {/* {viewRequest ?
                             <TouchableOpacity style={{ position: 'absolute', top: 0, right: 0, padding: 10, backgroundColor: 'red' }} activeOpacity={0.7}>
                                 <MaterialCommunityIcons
                                     name='dots-vertical'
@@ -222,7 +222,7 @@ const CardItem = ({ item, showHeartIcon, disablePress, searchView, showOrganiser
                                 />
                             </TouchableOpacity>
                             : null
-                        }
+                        } */}
 
                         <Modal isVisible={isModalVisible} style={styles.modal} onBackdropPress={toggleModal}>
                             <View style={styles.modalContainer}>

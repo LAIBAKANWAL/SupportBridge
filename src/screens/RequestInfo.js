@@ -33,6 +33,10 @@ export default function RequestInfo({ route }) {
     const [disability, setDisability] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
+    
+    const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
+    const [isBlurVisible, setBlurVisible] = useState(false);
+
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
     };
@@ -94,7 +98,15 @@ export default function RequestInfo({ route }) {
         }
     };
 
+    const openModal = () => {
+        setSubmitModalVisible(true);
+        setBlurVisible(true);
+    };
 
+    const closeModal = () => {
+        setSubmitModalVisible(false);
+        navigation.navigate('Admin')
+    };
     return (
 
         <SafeAreaView
@@ -221,7 +233,7 @@ export default function RequestInfo({ route }) {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 18, marginBottom: 20 }}>
                     <Button
-                        // onPress={validate}
+                        onPress={openModal}
                         title="Approved"
                         filled={true}
                         width='45%'
@@ -230,9 +242,41 @@ export default function RequestInfo({ route }) {
                             marginBottom: 20
                         }}
                     />
+                    <View centeredView>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={isSubmitModalVisible}
+                            onRequestClose={closeModal}
+                            style={styles.modalBox}
+                        >
+                            <View style={[styles.modalBox, isBlurVisible && styles.blurBackground]}>
+                                <View style={styles.modalView}>
+                                    <View style={{ alignItems: "center" }}>
+                                        <Image source={require('../../assets/images/check.png')}
+                                            style={{
+                                                marginBottom: 20
+                                            }}
+                                        />
+                                    </View>
+                                    <Text style={[styles.boxText(SIZES.xLarge - 2), { textAlign: 'center' }]}>Approved Successfully!</Text>
+                                  
+                                    <Button
+                                        onPress={closeModal} // Ensure this calls the submit function for navigation
+                                        title="OK"
+                                        filled={true}
+                                        width='100%'
+                                        style={{marginTop:20}}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+
+                    </View>
+
 
                     <Button
-                        // onPress={validate}
+                         onPress={openModal}
                         title="Rejected"
                         filled={false}
                         width='45%'
@@ -241,6 +285,38 @@ export default function RequestInfo({ route }) {
                             marginBottom: 20
                         }}
                     />
+                       <View centeredView>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={isSubmitModalVisible}
+                            onRequestClose={closeModal}
+                            style={styles.modalBox}
+                        >
+                            <View style={[styles.modalBox, isBlurVisible && styles.blurBackground]}>
+                                <View style={styles.modalView}>
+                                    <View style={{ alignItems: "center" }}>
+                                        <Image source={require('../../assets/images/sad-face1.png')}
+                                            style={{
+                                                marginBottom: 20
+                                            }}
+                                        />
+                                    </View>
+                                    <Text style={[styles.boxText(SIZES.xLarge - 2), { textAlign: 'center' }]}>Rejected</Text>
+                                  
+                                    <Button
+                                        onPress={closeModal} // Ensure this calls the submit function for navigation
+                                        title="OK"
+                                        filled={true}
+                                        width='100%'
+                                        style={{marginTop:20}}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+
+                    </View>
+
                 </View>
 
             </ScrollView>

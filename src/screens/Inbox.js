@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import InputField from '../components/textinput/InputField';
+import COLORS from '../../constants/Colors';
 
 const Inbox = () => {
   const [messageInput, setMessageInput] = useState('');
@@ -37,6 +39,7 @@ const Inbox = () => {
           onChangeText={(text) => setMessageInput(text)}
           placeholder="Type your message..."
         />
+
         <TouchableOpacity onPress={handleSendMessage}>
           <Text style={styles.sendButton}>Send</Text>
         </TouchableOpacity>
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   receivedMessage: {
-    backgroundColor: '#ecf0f1',
+    backgroundColor: COLORS.grey,
     alignSelf: 'flex-start',
     padding: 8,
     borderRadius: 8,
@@ -79,6 +82,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bdc3c7',
     borderRadius: 8,
+    color:COLORS.grey
   },
   sendButton: {
     color: '#3498db',

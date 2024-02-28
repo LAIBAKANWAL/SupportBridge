@@ -5,8 +5,8 @@ import SIZES from '../../constants/Sizes';
 import COLORS from '../../constants/Colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Users = () => {
 
@@ -15,28 +15,26 @@ const Users = () => {
     const navigation = useNavigation();
     useEffect(() => {
         getdata();
-    }, []);
+    },[]);
 
     const getdata = async () => {
         try {
             const response = await axios.get(`https://app-api.demo-customwebsites.com/api/admin-user-list`);
 
-            const sortedData = response.data.sort((a, b) => {
+          
+            const sortedData = response.data.data.sort((a, b) => {
                 const dateA = new Date(a.created_at || a.updated_at);
                 const dateB = new Date(b.created_at || b.updated_at);
 
                 return dateB - dateA;
             });
 
-console.log('data',response.data)
             setalldata(sortedData)
 
         } catch (error) {
             console.error('Error fetching data:', error.response.data);
         }
     };
-
-    const userObjects = alldata.map(user => user.data);
 
     const accountRemove = () => {
         Alert.alert('Are you sure to delete?', '',
@@ -57,46 +55,46 @@ console.log('data',response.data)
 
     };
 
-
-    // const renderItem = ({ item }) => (
-    //     <View style={styles.notificationItem}>
-    //         <Pressable
-    //             style={{
-    //                 flexDirection: "row",
-    //                 marginBottom: 15,
-    //                 marginTop: 15,
-    //                 justifyContent: "center",
-    //                 alignItems: "center",
-    //             }}
-    //         >
-    //             <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
-    //                 <Image
-    //                     style={{ width: 60, height: 60, resizeMode: 'cover' }}
-    //                     source={item.image}
-    //                 />
-
-    //             </View>
-
-    //             <View style={{ marginLeft: 10, flex: 1 }}>
-    //                 <Text style={styles.notificationTitle}>{item.name}</Text>
-    //                 <Text style={styles.notificationMessage}>{item.cnic}</Text>
-    //                 <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{item.phone}</Text>
-    //                 <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{item.email}</Text>
-    //             </View>
-
-
-    //             <View style={{ flexDirection: 'row' }}>
-    //                 <TouchableOpacity onPress={accountRemove}>
-    //                     <AntDesign name="delete" size={30} color="#e30e2a" />
-    //                 </TouchableOpacity>
-    //             </View>
-
-    //         </Pressable>
-
-
-    //     </View>
-    // );
-
+   
+    const renderItem = ({ item }) => (
+        <View style={styles.notificationItem}>
+        <Pressable
+            style={{
+                flexDirection: "row",
+                marginBottom: 15,
+                marginTop: 15,
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
+                <Image
+                    style={{ width: 60, height: 60, resizeMode: 'cover' }}
+                    source={item.profile_image ? { uri: "https://app-api.demo-customwebsites.com/" + item.profile_image } : require('../../assets/images/images.jpg')}
+                />
+    
+            </View>
+    
+            <View style={{ marginLeft: 10, flex: 1 }}>
+                <Text style={styles.notificationTitle}>{item.name}</Text>
+                <Text style={styles.notificationMessage}>{item.cnic_number}</Text>
+                <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{item.phone}</Text>
+                <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{item.email}</Text>
+            </View>
+    
+    
+            <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity onPress={accountRemove}>
+                    <AntDesign name="delete" size={30} color="#e30e2a" />
+                </TouchableOpacity>
+            </View>
+    
+        </Pressable>
+    
+    
+    </View>
+    );
+ 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
 
@@ -107,44 +105,13 @@ console.log('data',response.data)
                     showBackButton
                 />
 
-                {userObjects.map((data, index) => (
-                    <View style={styles.notificationItem}>
-                        <Pressable
-                            style={{
-                                flexDirection: "row",
-                                marginBottom: 15,
-                                marginTop: 15,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <View style={{ backgroundColor: COLORS.lightGray, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: 'hidden' }}>
-                                <Image
-                                    style={{ width: 60, height: 60, resizeMode: 'cover' }}
-                                    source={data.profile_image ? { uri: "https://app-api.demo-customwebsites.com/" + data.profile_image } : require('../../assets/images/images.jpg')}
-                                />
-
-                            </View>
-
-                            <View style={{ marginLeft: 10, flex: 1 }}>
-                                <Text style={styles.notificationTitle}>{data.name}</Text>
-                                <Text style={styles.notificationMessage}>{data.cnic_number}</Text>
-                                <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{data.phone}</Text>
-                                <Text style={{ color: '#a2a6ab', fontSize: 16, }}>{data.email}</Text>
-                            </View>
-
-
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity onPress={accountRemove}>
-                                    <AntDesign name="delete" size={30} color="#e30e2a" />
-                                </TouchableOpacity>
-                            </View>
-
-                        </Pressable>
-
-
-                    </View>
-                ))}
+      
+             <FlatList
+                    data={alldata}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                />
+                
             </View>
         </SafeAreaView>
     );

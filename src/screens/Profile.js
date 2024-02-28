@@ -16,8 +16,8 @@ export default function Profile() {
   const navigation = useNavigation();
   const [id, setid] = useState();
   const [name, setName] = useState();
-  const [profile, setProfile] = useState();
-  const [about, setAbout] = useState();
+  const [profile, setProfile] = useState(null);
+    const [about, setAbout] = useState();
 
   const [alldata, setalldata] = useState({});
 
@@ -80,10 +80,14 @@ export default function Profile() {
 
         <View style={{ alignSelf: "center" }}>
           <View style={styles.profileImage}>
-            <Image  style={styles.image} resizeMode="cover" source={profile ? { uri: profile } : require("../../assets/images/pic2.jpg")}></Image>
+            <Image  style={styles.image} resizeMode="cover" 
+            source={profile ? { uri: profile } : require("../../assets/images/pic2.jpg")}
+            // source={profile ? { uri: profile } : require("../../assets/images/placeholder.png")}
+
+            ></Image>
 
           </View>
-          <TouchableOpacity style={styles.dm}>
+          <TouchableOpacity style={styles.dm} onPress={() => navigation.navigate('Inbox')}>
             <MaterialIcons name="chat" size={15} color="#DFD8C8"></MaterialIcons>
           </TouchableOpacity>
           <View style={styles.active}></View>
@@ -181,8 +185,7 @@ export default function Profile() {
 
           <View>
 
-         
-            {/* <Card horizontal={true} hideContainer={true} showHeartIcon={false} list={alldata} searchView={false} disablePress={false} showOrganiserInfo={false} showSavedIcon={true} showDonationInfo={true} savedView={false} imageView={true} profileView={true} viewRequest={true}/>  */}
+       
 
           </View>
 

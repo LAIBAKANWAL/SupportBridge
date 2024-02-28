@@ -51,6 +51,7 @@ const Items = () => {
 
 
             setalldata(sortedData)
+            // console.log('saf',sortedData)
 
         } catch (error) {
             console.error('Error fetching data:', error.response.data);
