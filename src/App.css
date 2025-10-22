@@ -1,0 +1,140 @@
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.phone {
+  width: 375px;
+  height: 667px;
+  background: #000;
+  border-radius: 30px;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  color: #4a5568;
+  margin-bottom: 30px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.screen-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.nav-btn.active {
+  background: #667eea;
+  color: white;
+}
+
+.screen-content {
+  padding: 20px 0;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feature-list li {
+  padding: 15px;
+  margin: 10px 0;
+  background: #f7fafc;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.demo-form {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.demo-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.demo-btn {
+  width: 100%;
+  padding: 15px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.status {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #48bb78;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+}
